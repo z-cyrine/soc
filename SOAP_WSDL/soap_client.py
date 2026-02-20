@@ -142,7 +142,7 @@ def main():
     Démonstration du client SOAP bancaire avec différents scénarios
     """
     print("\n" + "="*70)
-    print("🏦 CLIENT BANCAIRE SOAP - Exemples Pratiques")
+    print("🏦 CLIENT BANCAIRE SOAP - Exemples")
     print("="*70)
     
     try:
@@ -152,26 +152,20 @@ def main():
         # Afficher les méthodes disponibles
         client.show_available_methods()
         
-        print("\n🧪 SCÉNARIOS DE TEST (4 opérations essentielles):\n")
+        print("\n SCÉNARIOS DE TEST (4 opérations):\n")
         
-        # =================================================================
         # SCÉNARIO 1: Consultation des informations client
-        # =================================================================
         print("📋 SCÉNARIO 1: Consultation des informations client")
         print("-" * 70)
         customer = client.get_customer_info('CUST001')
         
-        # =================================================================
         # SCÉNARIO 2: Consultation du solde d'un compte
-        # =================================================================
         print("💰 SCÉNARIO 2: Consultation du solde")
         print("-" * 70)
         account = client.get_account_balance('ACC001')
         initial_balance = account.balance
         
-        # =================================================================
         # SCÉNARIO 3: Transfert entre comptes (avec succès)
-        # =================================================================
         print("💸 SCÉNARIO 3: Transfert entre comptes (succès)")
         print("-" * 70)
         transfer_result = client.transfer_money(
@@ -182,21 +176,17 @@ def main():
         )
         assert transfer_result.success, "Le transfert a échoué"
         
-        # =================================================================
         # SCÉNARIO 4: Historique des transactions
-        # =================================================================
         print("📜 SCÉNARIO 4: Historique des transactions")
         print("-" * 70)
         history = client.get_transaction_history('ACC001', limit=5)
         
-        # =================================================================
         # RÉSUMÉ FINAL
-        # =================================================================
         print("\n" + "="*70)
         print("✅ TOUS LES TESTS SOAP ONT RÉUSSI!")
         print("="*70)
         print("\n📊 RÉSUMÉ:")
-        print(f"   • Opérations testées: 4 scénarios essentiels")
+        print(f"   • Opérations testées: 4 scénarios")
         print(f"   • Transactions effectuées: {len(history)}")
         print(f"   • Types complexes utilisés: Customer, Account, Transaction, TransferResult")
         print(f"   • Opérations disponibles: Lecture (2) + Écriture (1) + Historique (1)")
