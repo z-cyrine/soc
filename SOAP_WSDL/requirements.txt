@@ -1,0 +1,14 @@
+# Dépendances Python pour SOAP/WSDL
+
+# Serveur SOAP
+# Spyne 2.14.0
+git+https://github.com/arskom/spyne.git@master
+lxml==5.1.0             # Parser XML haute performance
+six                     # Dépendance pour Spyne
+
+# Client SOAP
+zeep==4.2.1             # Client SOAP moderne et facile à utiliser
+requests==2.31.0        # Requêtes HTTP (utilisé par zeep)
+
+# Utilitaires
+python-dotenv==1.0.0    # Gestion des variables d'environnement (optionnel)
