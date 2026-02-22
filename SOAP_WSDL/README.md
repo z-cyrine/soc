@@ -1,6 +1,6 @@
 # 🏦 Service Bancaire SOAP/WSDL
 
-Service bancaire complet utilisant SOAP avec génération automatique du contrat WSDL.
+Service bancaire utilisant SOAP avec génération automatique du contrat WSDL.
 
 ## Structure du Projet
 
@@ -53,8 +53,9 @@ python soap_client.py
 ## Données de Test
 
 **Clients disponibles :**
-- `CUST001` : Cyrine Bennour
-- `CUST002` : Ahmed Ben Ali
+- `CUST001` : Cyrine Zribi
+- `CUST002` : Ilef Rjiba
+- `CUST003` : Sarra Ragguem
 
 **Comptes disponibles :**
 - `ACC001` : Compte courant (5000 EUR)

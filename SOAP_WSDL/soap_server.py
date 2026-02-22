@@ -1,6 +1,6 @@
 """
 SOAP/WSDL Server Example - Banking Service
-Ce serveur expose un service bancaire complet via SOAP avec un contrat WSDL
+Ce serveur expose un service bancaire via SOAP avec un contrat WSDL
 Cas d'usage réel: Les services bancaires utilisent massivement SOAP/WSDL
 """
 
@@ -75,17 +75,25 @@ CUSTOMERS_DB = {
     'CUST001': Customer(
         customer_id='CUST001',
         first_name='Cyrine',
-        last_name='Bennour',
-        email='cyrine.bennour@example.com',
-        phone='+216 20 123 456',
+        last_name='Zribi',
+        email='cyrine.zribi@example.com',
+        phone='+33 6 12 34 56 78',
         registration_date=datetime(2024, 1, 15)
     ),
     'CUST002': Customer(
         customer_id='CUST002',
-        first_name='Ahmed',
-        last_name='Ben Ali',
-        email='ahmed.benali@example.com',
-        phone='+216 22 987 654',
+        first_name='Ilef',
+        last_name='Rjiba',
+        email='ilef.rjiba@example.com',
+        phone='+33 6 87 65 43 21',
+        registration_date=datetime(2024, 3, 10)
+    ),
+    'CUST003': Customer(
+        customer_id='CUST003',
+        first_name='Sarra',
+        last_name='Ragguem',
+        email='sarra.ragguem@example.com',
+        phone='+33 6 87 65 43 22',
         registration_date=datetime(2024, 3, 10)
     )
 }
@@ -301,7 +309,7 @@ def main():
     print("📄 WSDL disponible à: http://localhost:8000/?wsdl")
     print("=" * 70)
     print("\n📊 DONNÉES DISPONIBLES:")
-    print("   • 2 Clients (CUST001, CUST002)")
+    print("   • 3 Clients (CUST001, CUST002, CUST003)")
     print("   • 3 Comptes bancaires (ACC001, ACC002, ACC003)")
     print("=" * 70)
     print("\n🔧 OPÉRATIONS SOAP DISPONIBLES (4 opérations essentielles):")
