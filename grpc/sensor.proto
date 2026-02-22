@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package sensorservice;
+
+service Sensor {
+  rpc GetTemperature (SensorRequest) returns (SensorResponse);
+}
+
+message SensorRequest {
+  string sensor_id = 1;
+}
+
+message SensorResponse {
+  float temperature = 1;
+  string unit = 2;
+}
