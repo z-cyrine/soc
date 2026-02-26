@@ -526,7 +526,7 @@
                     <label>Pays :</label><input type="text" id="rest-country" placeholder="France" style="width:100px">
                     <label>Prix max :</label><input type="number" id="rest-maxprice" placeholder="200"
                         style="width:80px">
-                    <button class="btn btn-rest" onclick="restGetAll()">Envoyer</button>
+                    <button class="btn btn-rest" onclick="restGetAll()">GET</button>
                 </div>
                 <div class="status-bar"><span class="status-dot idle" id="s-getall"></span><span
                         id="st-getall">Inactif</span></div>
@@ -543,7 +543,7 @@
                         <option>2</option>
                         <option>3</option>
                     </select>
-                    <button class="btn btn-rest" onclick="restGetOne()">Envoyer</button>
+                    <button class="btn btn-rest" onclick="restGetOne()">GET</button>
                 </div>
                 <div class="status-bar"><span class="status-dot idle" id="s-getone"></span><span
                         id="st-getone">Inactif</span></div>
@@ -561,7 +561,7 @@
                 <div class="input-row">
                     <label>Activités :</label><input type="text" id="rest-pact" value="Burj Khalifa, Desert Safari"
                         style="width:240px">
-                    <button class="btn btn-rest" onclick="restPost()">Créer</button>
+                    <button class="btn btn-rest" onclick="restPost()">POST</button>
                 </div>
                 <div class="status-bar"><span class="status-dot idle" id="s-post"></span><span
                         id="st-post">Inactif</span></div>
@@ -578,8 +578,6 @@
                         <option>2</option>
                         <option>3</option>
                     </select>
-                </div>
-                <div class="input-row">
                     <label>Nom :</label><input type="text" id="rest-putname" value="Paris Updated" style="width:130px">
                     <label>Pays :</label><input type="text" id="rest-putcountry" value="France" style="width:90px">
                 </div>
@@ -587,8 +585,6 @@
                     <label>Prix/j :</label><input type="number" id="rest-putprice" value="999" style="width:80px">
                     <label>Activités :</label><input type="text" id="rest-putactivities" value="Tour Eiffel, Versailles"
                         style="width:200px">
-                </div>
-                <div class="input-row">
                     <button class="btn btn-rest" onclick="restPut()">PUT</button>
                 </div>
                 <div class="status-bar"><span class="status-dot idle" id="s-put"></span><span id="st-put">Inactif</span>
@@ -608,8 +604,6 @@
                     </select>
                     <label>Nouveau prix :</label><input type="number" id="rest-patchprice" value="120"
                         style="width:80px">
-                </div>
-                <div class="input-row">
                     <button class="btn btn-rest" onclick="restPatch()">PATCH</button>
                 </div>
                 <div class="status-bar"><span class="status-dot idle" id="s-patch"></span><span
@@ -896,8 +890,7 @@
         <div class="info-box gql">
             Contrairement à REST (un endpoint par ressource), GraphQL expose un <strong>unique endpoint</strong>
             <code>/graphql</code>. Le client choisit <strong>exactement</strong> les champs qu'il veut.
-            Pas de sur-fetching ni de sous-fetching. Support des <strong>Queries</strong> (lecture) et
-            des <strong>Mutations</strong> (écriture).
+            Support des <strong>Queries</strong> (lecture) et des <strong>Mutations</strong> (écriture).
         </div>
 
         <div class="grid2">
