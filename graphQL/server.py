@@ -4,14 +4,33 @@ Ce serveur expose un service de voyage via GraphQL avec sélection de champs
 Cas d'usage réel: Les APIs modernes utilisent GraphQL pour la flexibilité des clients
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 import graphene
 from graphene import Schema, ObjectType, String, Int, Float, List, Field
 from graphql import graphql_sync
+import json
+import queue
+import threading
 
 app = Flask(__name__)
 CORS(app)
+
+# ── File d'attente pour les abonnés SSE (simulation subscription) ──
+_subscribers = []
+_subscribers_lock = threading.Lock()
+
+def notify_subscribers(event_type, data):
+    """Envoie un événement à tous les abonnés SSE connectés"""
+    dead = []
+    with _subscribers_lock:
+        for q in _subscribers:
+            try:
+                q.put_nowait({"type": event_type, "data": data})
+            except Exception:
+                dead.append(q)
+        for q in dead:
+            _subscribers.remove(q)
 
 
 #Classe Destination
@@ -149,6 +168,14 @@ class CreateDestination(graphene.Mutation):
         
         DESTINATIONS_DB.append(new_destination)
         next_id += 1
+
+        # 🔔 Notifier les abonnés SSE
+        notify_subscribers("destinationAdded", {
+            "id": new_destination["id"],
+            "name": new_destination["name"],
+            "country": new_destination["country"],
+            "pricePerDay": new_destination["price_per_day"],
+        })
         
         return CreateDestination(
             destination=new_destination,
@@ -192,6 +219,14 @@ class UpdateDestination(graphene.Mutation):
             destination['price_per_day'] = price_per_day
         if activities is not None:
             destination['activities'] = activities
+
+        # 🔔 Notifier les abonnés SSE
+        notify_subscribers("destinationUpdated", {
+            "id": destination["id"],
+            "name": destination["name"],
+            "country": destination["country"],
+            "pricePerDay": destination["price_per_day"],
+        })
         
         return UpdateDestination(
             destination=destination,
@@ -221,6 +256,12 @@ class DeleteDestination(graphene.Mutation):
                 message=f"Destination avec ID {id} non trouvée"
             )
         
+        # 🔔 Notifier les abonnés SSE avant suppression
+        notify_subscribers("destinationDeleted", {
+            "id": destination["id"],
+            "name": destination["name"],
+        })
+
         DESTINATIONS_DB = [d for d in DESTINATIONS_DB if d['id'] != id]
         
         return DeleteDestination(
@@ -307,6 +348,44 @@ def graphql_endpoint():
         return jsonify({
             "errors": [{"message": str(e)}]
         }), 500
+
+
+@app.route('/graphql/subscribe', methods=['GET'])
+def graphql_subscribe():
+    """
+    Endpoint SSE simulant une GraphQL Subscription.
+    Le client se connecte une fois et reçoit les événements en push.
+    """
+    def event_stream():
+        q = queue.Queue()
+        with _subscribers_lock:
+            _subscribers.append(q)
+        print("🔔 Nouvel abonné SSE connecté")
+        # Message de bienvenue
+        welcome = {"type": "connected", "message": "Abonné aux événements GraphQL (simulation subscription)"}
+        yield f"data: {json.dumps(welcome)}\n\n"
+        try:
+            while True:
+                try:
+                    event = q.get(timeout=30)
+                    yield f"data: {json.dumps(event)}\n\n"
+                except queue.Empty:
+                    # Heartbeat pour garder la connexion ouverte
+                    yield f"data: {json.dumps({'type': 'heartbeat'})}\n\n"
+        except GeneratorExit:
+            with _subscribers_lock:
+                if q in _subscribers:
+                    _subscribers.remove(q)
+            print("🔌 Abonné SSE déconnecté")
+
+    return Response(
+        event_stream(),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'X-Accel-Buffering': 'no',
+        }
+    )
 
 
 def main():

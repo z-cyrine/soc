@@ -967,6 +967,51 @@
             </div>
         </div>
 
+        <!-- panneau subscription -->
+        <div class="panel" style="border-color:#e11d48">
+            <h3>
+                <span class="badge badge-gql">SUBSCRIPTION</span>
+                Simulation temps réel — <code style="font-size:.8rem;color:var(--muted)">GET /graphql/subscribe (SSE)</code>
+            </h3>
+
+            <div class="info-box gql" style="margin-bottom:1rem">
+                Une vraie subscription GraphQL utilise <strong>WebSocket</strong>. Ici on simule le même comportement
+                avec <strong>Server-Sent Events (SSE)</strong> : le serveur <em>pousse</em> un événement à chaque
+                <code>createDestination</code>, <code>updateDestination</code> ou <code>deleteDestination</code>.
+                <br><br>
+                <strong>Comment tester :</strong> cliquez sur <em>S'abonner</em>, puis exécutez n'importe quelle mutation ci-dessus → les événements apparaissent en temps réel ici ↓
+            </div>
+
+            <!-- schéma conceptuel -->
+            <div style="background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;font-family:'Cascadia Code',monospace;font-size:.78rem;color:#c9d1d9;line-height:1.8">
+                <span style="color:#8b949e"># Schéma conceptuel de la subscription</span><br>
+                <span style="color:#f97583">subscription</span> {<br>
+                &nbsp;&nbsp;<span style="color:#79c0ff">destinationAdded</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;id &nbsp;name &nbsp;country &nbsp;pricePerDay<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;<span style="color:#79c0ff">destinationUpdated</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;id &nbsp;name &nbsp;pricePerDay<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;<span style="color:#79c0ff">destinationDeleted</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;id &nbsp;name<br>
+                &nbsp;&nbsp;}<br>
+                }
+            </div>
+
+            <div class="input-row">
+                <button class="btn btn-gql" id="btn-sub" onclick="gqlSubscribe()">🔔 S'abonner</button>
+                <button class="btn" style="background:#334155;color:#e2e8f0" onclick="gqlUnsubscribe()">✖ Se désabonner</button>
+                <span style="font-size:.8rem;color:var(--muted)" id="sub-counter"></span>
+            </div>
+
+            <div class="status-bar">
+                <span class="status-dot idle" id="s-sub"></span>
+                <span id="st-sub">Non connecté</span>
+            </div>
+
+            <label style="display:block;margin-top:.8rem;margin-bottom:.4rem">Événements reçus (temps réel) :</label>
+            <div class="response-box" style="max-height:300px;min-height:100px" id="r-sub">En attente de connexion…</div>
+        </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════ gRPC ═══ -->
@@ -1158,6 +1203,73 @@ message <span class="hl-type">SensorResponse</span> {
                 setStatus('gql', false, 'Erreur réseau');
                 setResponse('gql', `❌ Impossible de joindre le serveur GraphQL.\n→ Lancez d'abord : python graphQL/server.py\n\n${e}`, false);
             }
+        }
+
+        /* ── GraphQL Subscription (SSE) ── */
+        let _sseSource = null;
+        let _sseCount = 0;
+
+        function gqlSubscribe() {
+            if (_sseSource) return; // déjà connecté
+
+            _sseSource = new EventSource('http://localhost:5001/graphql/subscribe');
+            setStatus('sub', null, 'Connexion…');
+            document.getElementById('r-sub').textContent = '';
+
+            _sseSource.onopen = () => {
+                setStatus('sub', true, 'Connecté — en écoute…');
+                document.getElementById('btn-sub').disabled = true;
+            };
+
+            _sseSource.onmessage = (e) => {
+                const event = JSON.parse(e.data);
+
+                if (event.type === 'heartbeat') return; // ignorer les pings
+
+                _sseCount++;
+                document.getElementById('sub-counter').textContent = `${_sseCount} événement(s) reçu(s)`;
+
+                const box = document.getElementById('r-sub');
+                const now = new Date().toLocaleTimeString();
+
+                // couleur selon le type d'événement
+                const colors = {
+                    connected:           '#8b949e',
+                    destinationAdded:    '#22c55e',
+                    destinationUpdated:  '#f59e0b',
+                    destinationDeleted:  '#ef4444',
+                };
+                const color = colors[event.type] || '#c9d1d9';
+
+                const icons = {
+                    connected:           '🔗',
+                    destinationAdded:    '✅ ADDED',
+                    destinationUpdated:  '✏️  UPDATED',
+                    destinationDeleted:  '🗑️  DELETED',
+                };
+                const label = icons[event.type] || event.type;
+
+                const line = document.createElement('div');
+                line.style.cssText = `color:${color};border-bottom:1px solid #1e293b;padding:.3rem 0;margin-bottom:.2rem`;
+                line.textContent = `[${now}] ${label}  ${event.data ? JSON.stringify(event.data) : event.message || ''}`;
+                box.prepend(line); // plus récent en haut
+            };
+
+            _sseSource.onerror = () => {
+                setStatus('sub', false, 'Connexion perdue');
+                gqlUnsubscribe();
+            };
+        }
+
+        function gqlUnsubscribe() {
+            if (_sseSource) {
+                _sseSource.close();
+                _sseSource = null;
+            }
+            setStatus('sub', null, 'Déconnecté');
+            document.getElementById('btn-sub').disabled = false;
+            document.getElementById('sub-counter').textContent = '';
+            _sseCount = 0;
         }
 
         // ── gRPC ──────────────────────────────────────────────────────────────
