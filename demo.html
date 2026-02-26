@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>TP SOC — Demo Services Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        :root {
+            --rest: #2563eb;
+            --soap: #7c3aed;
+            --graphql: #e11d48;
+            --grpc: #0891b2;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --card: #263348;
+            --border: #334155;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        header span {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        /* ── TABS ── */
+        nav {
+            display: flex;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.6rem;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            color: var(--text);
+        }
+
+        #tab-rest.active {
+            border-color: var(--rest);
+            color: #60a5fa;
+        }
+
+        #tab-soap.active {
+            border-color: var(--soap);
+            color: #a78bfa;
+        }
+
+        #tab-gql.active {
+            border-color: var(--graphql);
+            color: #fb7185;
+        }
+
+        #tab-grpc.active {
+            border-color: var(--grpc);
+            color: #38bdf8;
+        }
+
+        /* ── CONTENT ── */
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ── CARDS / PANELS ── */
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .15rem .55rem;
+            border-radius: 6px;
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+        }
+
+        .badge-get {
+            background: #1d4ed8;
+            color: #bfdbfe;
+        }
+
+        .badge-post {
+            background: #166534;
+            color: #bbf7d0;
+        }
+
+        .badge-put {
+            background: #92400e;
+            color: #fde68a;
+        }
+
+        .badge-patch {
+            background: #7c2d12;
+            color: #fed7aa;
+        }
+
+        .badge-delete {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+
+        .badge-soap {
+            background: #4c1d95;
+            color: #ddd6fe;
+        }
+
+        .badge-gql {
+            background: #881337;
+            color: #fecdd3;
+        }
+
+        .badge-grpc {
+            background: #164e63;
+            color: #bae6fd;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: .6rem 1.2rem;
+            cursor: pointer;
+            font-size: .85rem;
+            font-weight: 600;
+            transition: opacity .15s, transform .1s;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .btn:hover {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-rest {
+            background: var(--rest);
+            color: #fff;
+        }
+
+        .btn-soap {
+            background: var(--soap);
+            color: #fff;
+        }
+
+        .btn-gql {
+            background: var(--graphql);
+            color: #fff;
+        }
+
+        .btn-grpc {
+            background: var(--grpc);
+            color: #fff;
+        }
+
+        .btn-sm {
+            padding: .35rem .8rem;
+            font-size: .78rem;
+        }
+
+        /* ── GRID ── */
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media(max-width:768px) {
+            .grid2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── RESPONSE BOX ── */
+        .response-box {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: .78rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 380px;
+            overflow-y: auto;
+            color: #c9d1d9;
+            min-height: 60px;
+        }
+
+        .response-box .ok {
+            color: var(--success);
+        }
+
+        .response-box .err {
+            color: var(--error);
+        }
+
+        /* ── STATUS BAR ── */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: .5rem;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.ok {
+            background: var(--success);
+        }
+
+        .status-dot.err {
+            background: var(--error);
+        }
+
+        .status-dot.idle {
+            background: var(--muted);
+        }
+
+        /* ── INPUT ROW ── */
+        .input-row {
+            display: flex;
+            gap: .5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type=text],
+        input[type=number],
+        textarea,
+        select {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            padding: .55rem .8rem;
+            font-size: .85rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #60a5fa;
+        }
+
+        textarea {
+            resize: vertical;
+            font-family: 'Cascadia Code', monospace;
+            font-size: .8rem;
+        }
+
+        label {
+            font-size: .82rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        /* ── INFO BOX ── */
+        .info-box {
+            background: var(--card);
+            border-left: 3px solid;
+            border-radius: 0 8px 8px 0;
+            padding: .8rem 1rem;
+            margin-bottom: 1rem;
+            font-size: .85rem;
+            line-height: 1.6;
+        }
+
+        .info-box.rest {
+            border-color: var(--rest);
+        }
+
+        .info-box.soap {
+            border-color: var(--soap);
+        }
+
+        .info-box.gql {
+            border-color: var(--graphql);
+        }
+
+        .info-box.grpc {
+            border-color: var(--grpc);
+        }
+
+        /* ── XML / CODE ── */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: .77rem;
+            line-height: 1.7;
+            overflow-x: auto;
+            color: #c9d1d9;
+            white-space: pre;
+        }
+
+        .hl-tag {
+            color: #7ee787;
+        }
+
+        .hl-attr {
+            color: #79c0ff;
+        }
+
+        .hl-val {
+            color: #ffab70;
+        }
+
+        .hl-str {
+            color: #a5d6ff;
+        }
+
+        .hl-kw {
+            color: #f97583;
+        }
+
+        .hl-cmt {
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        .hl-type {
+            color: #d2a8ff;
+        }
+
+        /* ── FLOW DIAGRAM ── */
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            font-size: .82rem;
+        }
+
+        .flow-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: .4rem .8rem;
+        }
+
+        .flow-arrow {
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        /* ── SPINNER ── */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #ffffff44;
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>🌐 TP — Architectures orientées services</h1>
+            <span>REST · SOAP/WSDL · GraphQL · gRPC</span>
+        </div>
+    </header>
+
+    <nav>
+        <button class="tab-btn active" id="tab-rest" onclick="switchTab('rest')">
+            <span class="dot" style="background:#2563eb"></span> REST API
+        </button>
+        <button class="tab-btn" id="tab-soap" onclick="switchTab('soap')">
+            <span class="dot" style="background:#7c3aed"></span> SOAP / WSDL
+        </button>
+        <button class="tab-btn" id="tab-gql" onclick="switchTab('gql')">
+            <span class="dot" style="background:#e11d48"></span> GraphQL
+        </button>
+        <button class="tab-btn" id="tab-grpc" onclick="switchTab('grpc')">
+            <span class="dot" style="background:#0891b2"></span> gRPC
+        </button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════ REST ═══ -->
+    <div class="tab-content active" id="content-rest">
+        <div class="section-title">
+            <span class="dot" style="background:var(--rest);width:14px;height:14px"></span>
+            REST API — Travel Planner
+            <span style="font-size:.8rem;color:var(--muted);font-weight:400">Flask · localhost:5000</span>
+        </div>
+
+        <div class="grid2">
+            <!-- GET ALL -->
+            <div class="panel">
+                <h3><span class="badge badge-get">GET</span> /destinations</h3>
+                <div class="input-row">
+                    <label>Pays :</label><input type="text" id="rest-country" placeholder="France" style="width:100px">
+                    <label>Prix max :</label><input type="number" id="rest-maxprice" placeholder="200"
+                        style="width:80px">
+                    <button class="btn btn-rest" onclick="restGetAll()">Envoyer</button>
+                </div>
+                <div class="status-bar"><span class="status-dot idle" id="s-getall"></span><span
+                        id="st-getall">Inactif</span></div>
+                <div class="response-box" id="r-getall">En attente…</div>
+            </div>
+
+            <!-- GET ONE -->
+            <div class="panel">
+                <h3><span class="badge badge-get">GET</span> /destinations/:id</h3>
+                <div class="input-row">
+                    <label>ID :</label>
+                    <select id="rest-getid" style="width:80px">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                    <button class="btn btn-rest" onclick="restGetOne()">Envoyer</button>
+                </div>
+                <div class="status-bar"><span class="status-dot idle" id="s-getone"></span><span
+                        id="st-getone">Inactif</span></div>
+                <div class="response-box" id="r-getone">En attente…</div>
+            </div>
+
+            <!-- POST -->
+            <div class="panel">
+                <h3><span class="badge badge-post">POST</span> /destinations — Créer</h3>
+                <div class="input-row">
+                    <label>Nom :</label><input type="text" id="rest-pname" value="Dubai" style="width:110px">
+                    <label>Pays :</label><input type="text" id="rest-pct" value="UAE" style="width:80px">
+                    <label>Prix/j :</label><input type="number" id="rest-pprice" value="250" style="width:70px">
+                </div>
+                <div class="input-row">
+                    <label>Activités :</label><input type="text" id="rest-pact" value="Burj Khalifa, Desert Safari"
+                        style="width:240px">
+                    <button class="btn btn-rest" onclick="restPost()">Créer</button>
+                </div>
+                <div class="status-bar"><span class="status-dot idle" id="s-post"></span><span
+                        id="st-post">Inactif</span></div>
+                <div class="response-box" id="r-post">En attente…</div>
+            </div>
+
+            <!-- PUT -->
+            <div class="panel">
+                <h3><span class="badge badge-put">PUT</span> /destinations/:id — Mise à jour complète</h3>
+                <div class="input-row">
+                    <label>ID :</label>
+                    <select id="rest-putid" style="width:70px">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+                <div class="input-row">
+                    <label>Nom :</label><input type="text" id="rest-putname" value="Paris Updated" style="width:130px">
+                    <label>Pays :</label><input type="text" id="rest-putcountry" value="France" style="width:90px">
+                </div>
+                <div class="input-row">
+                    <label>Prix/j :</label><input type="number" id="rest-putprice" value="999" style="width:80px">
+                    <label>Activités :</label><input type="text" id="rest-putactivities" value="Tour Eiffel, Versailles"
+                        style="width:200px">
+                </div>
+                <div class="input-row">
+                    <button class="btn btn-rest" onclick="restPut()">PUT</button>
+                </div>
+                <div class="status-bar"><span class="status-dot idle" id="s-put"></span><span id="st-put">Inactif</span>
+                </div>
+                <div class="response-box" id="r-put">En attente…</div>
+            </div>
+
+            <!-- PATCH -->
+            <div class="panel">
+                <h3><span class="badge badge-patch">PATCH</span> /destinations/:id — Partiel</h3>
+                <div class="input-row">
+                    <label>ID :</label>
+                    <select id="rest-patchid" style="width:70px">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                    <label>Nouveau prix :</label><input type="number" id="rest-patchprice" value="120"
+                        style="width:80px">
+                </div>
+                <div class="input-row">
+                    <button class="btn btn-rest" onclick="restPatch()">PATCH</button>
+                </div>
+                <div class="status-bar"><span class="status-dot idle" id="s-patch"></span><span
+                        id="st-patch">Inactif</span></div>
+                <div class="response-box" id="r-patch">En attente…</div>
+            </div>
+
+            <!-- DELETE -->
+            <div class="panel">
+                <h3><span class="badge badge-delete">DELETE</span> /destinations/:id</h3>
+                <div class="input-row">
+                    <label>ID :</label>
+                    <select id="rest-delid" style="width:70px">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                    <button class="btn btn-rest" onclick="restDelete()">Supprimer</button>
+                </div>
+                <div class="status-bar"><span class="status-dot idle" id="s-del"></span><span id="st-del">Inactif</span>
+                </div>
+                <div class="response-box" id="r-del">En attente…</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ SOAP ═══ -->
+    <div class="tab-content" id="content-soap">
+        <div class="section-title">
+            <span class="dot" style="background:var(--soap);width:14px;height:14px"></span>
+            SOAP / WSDL — Banking Service
+            <span style="font-size:.8rem;color:var(--muted);font-weight:400">Spyne · localhost:8000</span>
+        </div>
+
+        <div class="info-box soap">
+            Service bancaire exposé via <strong>SOAP 1.1</strong> avec un contrat <strong>WSDL auto-généré</strong>.
+            Les types de données sont définis comme des <strong>schémas XSD</strong> (Customer, Account, Transaction).
+            Côté client, la bibliothèque <code>zeep</code> parse le WSDL et sérialise les enveloppes XML
+            automatiquement.
+        </div>
+
+        <div class="flow">
+            <div class="flow-box">Client Python (zeep)</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">Enveloppe SOAP / XML</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">HTTP POST :8000</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">Spyne (parse WSDL)</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box">Réponse SOAP / XML</div>
+        </div>
+
+        <div class="grid2">
+            <div class="panel">
+                <h3><span class="badge badge-soap">SOAP</span> Requête : get_customer_info</h3>
+                <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">Enveloppe XML envoyée par le client :
+                </p>
+                <div class="code-block"><span class="hl-cmt">&lt;!-- HTTP POST http://localhost:8000 --&gt;</span>
+                    <span class="hl-tag">&lt;soapenv:Envelope</span> <span class="hl-attr">xmlns:soapenv</span>=<span
+                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span>
+                    <span class="hl-attr">xmlns:bank</span>=<span
+                        class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;soapenv:Header/&gt;</span>
+                    <span class="hl-tag">&lt;soapenv:Body&gt;</span>
+                    <span class="hl-tag">&lt;bank:get_customer_info&gt;</span>
+                    <span class="hl-tag">&lt;bank:customer_id&gt;</span><span class="hl-str">CUST001</span><span
+                        class="hl-tag">&lt;/bank:customer_id&gt;</span>
+                    <span class="hl-tag">&lt;/bank:get_customer_info&gt;</span>
+                    <span class="hl-tag">&lt;/soapenv:Body&gt;</span>
+                    <span class="hl-tag">&lt;/soapenv:Envelope&gt;</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3><span class="badge badge-soap">SOAP</span> Réponse : Customer</h3>
+                <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">Réponse XML retournée par le serveur
+                    :</p>
+                <div class="code-block"><span class="hl-tag">&lt;soapenv:Envelope</span> <span
+                        class="hl-attr">xmlns:soapenv</span>=<span class="hl-val">"..."</span><span
+                        class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;soapenv:Body&gt;</span>
+                    <span class="hl-tag">&lt;tns:get_customer_infoResponse&gt;</span>
+                    <span class="hl-tag">&lt;tns:get_customer_infoResult&gt;</span>
+                    <span class="hl-tag">&lt;tns:customer_id&gt;</span><span class="hl-str">CUST001</span><span
+                        class="hl-tag">&lt;/tns:customer_id&gt;</span>
+                    <span class="hl-tag">&lt;tns:first_name&gt;</span><span class="hl-str">Cyrine</span><span
+                        class="hl-tag">&lt;/tns:first_name&gt;</span>
+                    <span class="hl-tag">&lt;tns:last_name&gt;</span><span class="hl-str">Zribi</span><span
+                        class="hl-tag">&lt;/tns:last_name&gt;</span>
+                    <span class="hl-tag">&lt;tns:email&gt;</span><span
+                        class="hl-str">cyrine.zribi@telecom-sudparis.eu</span><span
+                        class="hl-tag">&lt;/tns:email&gt;</span>
+                    <span class="hl-tag">&lt;/tns:get_customer_infoResult&gt;</span>
+                    <span class="hl-tag">&lt;/tns:get_customer_infoResponse&gt;</span>
+                    <span class="hl-tag">&lt;/soapenv:Body&gt;</span>
+                    <span class="hl-tag">&lt;/soapenv:Envelope&gt;</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3><span class="badge badge-soap">SOAP</span> Requête : transfer_money</h3>
+                <div class="code-block"><span class="hl-tag">&lt;bank:transfer_money&gt;</span>
+                    <span class="hl-tag">&lt;bank:from_account&gt;</span><span class="hl-str">ACC001</span><span
+                        class="hl-tag">&lt;/bank:from_account&gt;</span>
+                    <span class="hl-tag">&lt;bank:amount&gt;</span><span class="hl-str">500.00</span><span
+                        class="hl-tag">&lt;/bank:amount&gt;</span>
+                    <span class="hl-tag">&lt;bank:to_account&gt;</span><span class="hl-str">ACC002</span><span
+                        class="hl-tag">&lt;/bank:to_account&gt;</span>
+                    <span class="hl-tag">&lt;bank:description&gt;</span><span class="hl-str">Virement
+                        mensuel</span><span class="hl-tag">&lt;/bank:description&gt;</span>
+                    <span class="hl-tag">&lt;/bank:transfer_money&gt;</span>
+                </div>
+                <p style="font-size:.8rem;color:var(--muted);margin-top:.8rem">
+                    Vérifie : solde suffisant → débit/crédit atomique → génère un <code>transaction_id</code> UUID.
+                </p>
+            </div>
+
+            <div class="panel">
+                <h3><span class="badge badge-soap">WSDL</span> Types complexes auto-générés</h3>
+                <div class="code-block"><span class="hl-cmt">&lt;!-- Extrait du WSDL auto-généré par Spyne --&gt;</span>
+                    <span class="hl-cmt">&lt;!-- GET http://localhost:8000/?wsdl --&gt;</span>
+
+                    <span class="hl-tag">&lt;xs:complexType</span> <span class="hl-attr">name</span>=<span
+                        class="hl-val">"Customer"</span><span class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;xs:sequence&gt;</span>
+                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
+                        class="hl-val">"customer_id"</span> <span class="hl-attr">type</span>=<span
+                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
+                        class="hl-val">"first_name"</span> <span class="hl-attr">type</span>=<span
+                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
+                        class="hl-val">"last_name"</span> <span class="hl-attr">type</span>=<span
+                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
+                        class="hl-val">"email"</span> <span class="hl-attr">type</span>=<span
+                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
+                        class="hl-val">"balance"</span> <span class="hl-attr">type</span>=<span
+                        class="hl-val">"xs:float"</span><span class="hl-tag">/&gt;</span>
+                    <span class="hl-tag">&lt;/xs:sequence&gt;</span>
+                    <span class="hl-tag">&lt;/xs:complexType&gt;</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>📋 Opérations disponibles</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+                <thead>
+                    <tr style="border-bottom:1px solid var(--border);color:var(--muted)">
+                        <th style="text-align:left;padding:.5rem">Opération</th>
+                        <th style="text-align:left;padding:.5rem">Paramètres</th>
+                        <th style="text-align:left;padding:.5rem">Retour</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.6rem"><code>get_customer_info</code></td>
+                        <td style="padding:.6rem"><code>customer_id</code></td>
+                        <td style="padding:.6rem"><code>Customer</code></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.6rem"><code>get_account_balance</code></td>
+                        <td style="padding:.6rem"><code>account_number</code></td>
+                        <td style="padding:.6rem"><code>Account</code></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.6rem"><code>transfer_money</code></td>
+                        <td style="padding:.6rem"><code>from, amount, to, description</code></td>
+                        <td style="padding:.6rem"><code>TransferResult</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:.6rem"><code>get_transaction_history</code></td>
+                        <td style="padding:.6rem"><code>account_number, limit</code></td>
+                        <td style="padding:.6rem"><code>Array(Transaction)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ GRAPHQL ═══ -->
+    <div class="tab-content" id="content-gql">
+        <div class="section-title">
+            <span class="dot" style="background:var(--graphql);width:14px;height:14px"></span>
+            GraphQL — Travel Planner
+            <span style="font-size:.8rem;color:var(--muted);font-weight:400">Graphene · localhost:5001</span>
+        </div>
+
+        <div class="info-box gql">
+            Contrairement à REST (un endpoint par ressource), GraphQL expose un <strong>unique endpoint</strong>
+            <code>/graphql</code>. Le client choisit <strong>exactement</strong> les champs qu'il veut.
+            Pas de sur-fetching ni de sous-fetching. Support des <strong>Queries</strong> (lecture) et
+            des <strong>Mutations</strong> (écriture).
+        </div>
+
+        <div class="grid2">
+            <div class="panel">
+                <h3><span class="badge badge-gql">QUERY</span> Scénarios du client.py (7 exemples)</h3>
+                <div class="input-row" style="flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`query {\n  destinations {\n    id\n    name\n    country\n    pricePerDay\n    activities\n  }\n}`)">
+                        1 · Toutes les destinations
+                    </button>
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`query {\n  destinations(country: &quot;France&quot;) {\n    id\n    name\n    country\n    pricePerDay\n  }\n}`)">
+                        2 · Filtrer par pays (France)
+                    </button>
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`query {\n  destination(id: 1) {\n    name\n    activities\n  }\n}`)">
+                        3 · Champs minimaux (ID=1)
+                    </button>
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`query {\n  destinations(maxPrice: 150) {\n    name\n    pricePerDay\n  }\n}`)">
+                        4 · Budget ≤ 150 €/jour
+                    </button>
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`mutation {\n  createDestination(input: {\n    name: &quot;Rome&quot;\n    country: &quot;Italy&quot;\n    pricePerDay: 140\n    activities: [&quot;Colosseum&quot;, &quot;Vatican&quot;, &quot;Trevi Fountain&quot;]\n  }) {\n    success\n    message\n    destination {\n      id\n      name\n      country\n    }\n  }\n}`)">
+                        5 · Mutation : créer Rome
+                    </button>
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`mutation {\n  updateDestination(id: 1, pricePerDay: 165) {\n    success\n    message\n    destination {\n      name\n      pricePerDay\n    }\n  }\n}`)">
+                        6 · Mutation : màj prix ID=1
+                    </button>
+
+                    <button class="btn btn-gql btn-sm"
+                        onclick="gqlPreset(`mutation {\n  deleteDestination(id: 4) {\n    success\n    message\n  }\n}`)">
+                        7 · Mutation : supprimer ID=4
+                    </button>
+
+                </div>
+
+                <label style="display:block;margin-bottom:.4rem">Requête GraphQL :</label>
+                <textarea id="gql-query" rows="10" style="width:100%;margin-bottom:.8rem">query {
+  destinations {
+    id
+    name
+    country
+    pricePerDay
+    activities
+  }
+}</textarea>
+                <button class="btn btn-gql" onclick="gqlSend()">▶ Exécuter</button>
+                <div class="status-bar" style="margin-top:.8rem">
+                    <span class="status-dot idle" id="s-gql"></span><span id="st-gql">Inactif</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>📥 Réponse GraphQL</h3>
+                <div class="response-box" style="max-height:420px" id="r-gql">En attente d'une requête…</div>
+                <p style="font-size:.75rem;color:var(--muted);margin-top:.6rem">
+                    💡 Seuls les champs demandés sont retournés — c'est la <strong>sélection de champs</strong> GraphQL.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ gRPC ═══ -->
+    <div class="tab-content" id="content-grpc">
+        <div class="section-title">
+            <span class="dot" style="background:var(--grpc);width:14px;height:14px"></span>
+            gRPC — Sensor Service
+            <span style="font-size:.8rem;color:var(--muted);font-weight:400">Protocol Buffers · localhost:50051</span>
+        </div>
+
+        <div class="info-box grpc">
+            gRPC utilise <strong>Protocol Buffers</strong> (Protobuf) comme format de sérialisation binaire
+            et <strong>HTTP/2</strong> comme transport. Le fichier <code>sensor.proto</code> définit le contrat —
+            les fichiers <code>sensor_pb2.py</code> et <code>sensor_pb2_grpc.py</code> sont
+            <strong>auto-générés</strong> par <code>protoc</code>. La démo passe par un pont HTTP
+            (<code>bridge.py</code>) qui appelle le vrai serveur gRPC en temps réel.
+        </div>
+
+        <!-- FLOW -->
+        <div class="flow" style="margin-bottom:1.5rem">
+            <div class="flow-box" style="border-color:#0891b2">🌐 Navigateur</div>
+            <span class="flow-arrow">→ HTTP →</span>
+            <div class="flow-box" style="border-color:#0891b2">bridge.py <span style="font-size:.7rem;color:var(--muted)">:8083</span></div>
+            <span class="flow-arrow">→ gRPC / HTTP2 →</span>
+            <div class="flow-box" style="border-color:#0891b2">server.py <span style="font-size:.7rem;color:var(--muted)">:50051</span></div>
+            <span class="flow-arrow">→ Protobuf →</span>
+            <div class="flow-box" style="border-color:var(--success)">22.5 Celsius</div>
+        </div>
+
+        <!-- INSTRUCTIONS DÉMARRAGE -->
+        <div class="panel" style="border-color:#0e7490;margin-bottom:1.5rem">
+            <h3 style="color:#38bdf8">⚡ Démarrer les serveurs</h3>
+            <div class="grid2" style="gap:1rem">
+                <div>
+                    <p style="font-size:.82rem;font-weight:600;margin-bottom:.4rem;color:#38bdf8">1. Serveur gRPC — server.py</p>
+                    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">Écoute sur le port <strong>50051</strong>. Reçoit un <code>sensor_id</code>, retourne une température simulée de 22.5°C.</p>
+                    <div class="code-block" style="padding:.6rem 1rem;font-size:.8rem">python grpc/server.py
+<span style="color:#22c55e">Serveur gRPC lancé sur le port 50051...</span></div>
+                </div>
+                <div>
+                    <p style="font-size:.82rem;font-weight:600;margin-bottom:.4rem;color:#38bdf8">2. Pont HTTP → gRPC — bridge.py</p>
+                    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">Expose le service gRPC via HTTP sur le port <strong>8083</strong> pour que le navigateur puisse l'appeler.</p>
+                    <div class="code-block" style="padding:.6rem 1rem;font-size:.8rem">python grpc/bridge.py
+<span style="color:#22c55e">Pont HTTP → gRPC — port 8083
+GET /grpc/temperature?sensor_id=SN-001</span></div>
+                </div>
+            </div>
+            <div style="margin-top:.8rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">
+                <button class="btn btn-grpc btn-sm" onclick="grpcCheckStatus()">🔍 Vérifier les serveurs</button>
+                <span id="grpc-status-msg" style="font-size:.8rem;color:var(--muted)">Cliquez pour vérifier l'état</span>
+            </div>
+        </div>
+
+        <div class="grid2">
+            <!-- APPELS LIVE -->
+            <div class="panel">
+                <h3><span class="badge badge-grpc">RPC</span> Appel — GetTemperature</h3>
+                <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">
+                    Correspond exactement à l'appel de <code>client.py</code> :<br>
+                    <code style="color:#38bdf8">stub.GetTemperature(SensorRequest(sensor_id="SN-001"))</code>
+                </p>
+                <p style="font-size:.82rem;font-weight:600;margin-bottom:.6rem">Choisir un capteur :</p>
+                <div class="input-row" style="flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('SN-001')">▶ SN-001</button>
+                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('SN-002')">▶ SN-002</button>
+                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('SENSOR-LAB-A')">▶ SENSOR-LAB-A</button>
+                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('CAPTEUR-42')">▶ CAPTEUR-42</button>
+                </div>
+                <div class="input-row" style="margin-bottom:1rem">
+                    <label>ID libre :</label>
+                    <input type="text" id="grpc-sensor-id" value="SN-001" style="width:140px">
+                    <button class="btn btn-grpc" onclick="grpcCallCustom()">▶ Envoyer</button>
+                </div>
+                <div class="status-bar">
+                    <span class="status-dot idle" id="s-grpc"></span>
+                    <span id="st-grpc">Inactif</span>
+                </div>
+                <div class="response-box" id="r-grpc">En attente d'un appel…</div>
+            </div>
+
+            <!-- PROTO -->
+            <div class="panel">
+                <h3><span class="badge badge-grpc">PROTO</span> Contrat — sensor.proto</h3>
+                <p style="font-size:.8rem;color:var(--muted);margin-bottom:.8rem">Source de vérité du service — définit les messages et le service RPC :</p>
+                <div class="code-block">syntax = <span class="hl-val">"proto3"</span>;
+package sensorservice;
+
+<span class="hl-cmt">// Service exposé</span>
+service Sensor {
+  rpc <span class="hl-type">GetTemperature</span> (<span class="hl-type">SensorRequest</span>)
+      returns (<span class="hl-type">SensorResponse</span>);
+}
+
+<span class="hl-cmt">// Requête : identifiant du capteur</span>
+message <span class="hl-type">SensorRequest</span> {
+  string sensor_id = 1;
+}
+
+<span class="hl-cmt">// Réponse : température + unité</span>
+message <span class="hl-type">SensorResponse</span> {
+  float  temperature = 1;
+  string unit        = 2;
+}</div>
+                <p style="font-size:.75rem;color:var(--muted);margin-top:.8rem">
+                    Compilé avec <code>protoc</code> → génère <code>sensor_pb2.py</code> + <code>sensor_pb2_grpc.py</code>
+                </p>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>⚡ gRPC vs REST — Pourquoi gRPC ?</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+                <thead><tr style="border-bottom:1px solid var(--border);color:var(--muted)">
+                    <th style="text-align:left;padding:.5rem">Critère</th>
+                    <th style="text-align:center;padding:.5rem">REST / JSON</th>
+                    <th style="text-align:center;padding:.5rem">gRPC / Protobuf</th>
+                </tr></thead>
+                <tbody>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.5rem">Protocole</td>
+                        <td style="text-align:center">HTTP/1.1</td>
+                        <td style="text-align:center;color:#38bdf8">HTTP/2</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.5rem">Format</td>
+                        <td style="text-align:center">Texte JSON</td>
+                        <td style="text-align:center;color:#38bdf8">Binaire Protobuf</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.5rem">Performance</td>
+                        <td style="text-align:center">Normale</td>
+                        <td style="text-align:center;color:#38bdf8">~10× plus rapide</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:.5rem">Contrat d'interface</td>
+                        <td style="text-align:center">Implicite (URLs)</td>
+                        <td style="text-align:center;color:#38bdf8">Explicite (.proto)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:.5rem">Cas d'usage</td>
+                        <td style="text-align:center">APIs publiques web</td>
+                        <td style="text-align:center;color:#38bdf8">Microservices / IoT</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const REST = 'http://localhost:5000';
+        const GQL = 'http://localhost:5001/graphql';
+        const BRIDGE = 'http://localhost:8083';
+
+        function switchTab(name) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+            document.getElementById('content-' + name).classList.add('active');
+        }
+
+        /* ── helpers ── */
+        function setStatus(id, ok, label) {
+            const dot = document.getElementById('s-' + id);
+            const st = document.getElementById('st-' + id);
+            dot.className = 'status-dot ' + (ok === null ? 'idle' : ok ? 'ok' : 'err');
+            st.textContent = label;
+        }
+        function setResponse(id, text, ok) {
+            const box = document.getElementById('r-' + id);
+            box.textContent = text;
+            box.style.color = ok === false ? 'var(--error)' : ok === true ? 'var(--success)' : '#c9d1d9';
+        }
+        function fmt(obj) { return JSON.stringify(obj, null, 2); }
+
+        async function call(method, url, body, statusId) {
+            setStatus(statusId, null, 'Envoi…');
+            try {
+                const opts = { method, headers: { 'Content-Type': 'application/json' } };
+                if (body) opts.body = JSON.stringify(body);
+                const r = await fetch(url, opts);
+                const ok = r.ok || r.status === 304;
+                const text = r.status === 204 || r.status === 304
+                    ? `HTTP ${r.status} — Pas de contenu / Ressource en cache`
+                    : fmt(await r.json());
+                setStatus(statusId, ok, `HTTP ${r.status} ${r.statusText}`);
+                setResponse(statusId, text, ok);
+            } catch (e) {
+                setStatus(statusId, false, 'Erreur réseau');
+                setResponse(statusId, `❌ Impossible de joindre le serveur.\n→ Lancez d'abord : python REST/app.py\n\n${e}`, false);
+            }
+        }
+
+        /* ── REST ── */
+        async function restGetAll() {
+            const country = document.getElementById('rest-country').value;
+            const max_price = document.getElementById('rest-maxprice').value;
+            let url = REST + '/destinations';
+            const params = [];
+            if (country) params.push('country=' + country);
+            if (max_price) params.push('max_price=' + max_price);
+            if (params.length) url += '?' + params.join('&');
+            await call('GET', url, null, 'getall');
+        }
+        async function restGetOne() { await call('GET', `${REST}/destinations/${document.getElementById('rest-getid').value}`, null, 'getone'); }
+        async function restPost() {
+            const activities = document.getElementById('rest-pact').value.split(',').map(s => s.trim());
+            await call('POST', `${REST}/destinations`, {
+                name: document.getElementById('rest-pname').value,
+                country: document.getElementById('rest-pct').value,
+                price_per_day: +document.getElementById('rest-pprice').value,
+                activities
+            }, 'post');
+        }
+        async function restPut() {
+            const id = document.getElementById('rest-putid').value;
+            const activities = document.getElementById('rest-putactivities').value.split(',').map(s => s.trim()).filter(Boolean);
+            await call('PUT', `${REST}/destinations/${id}`, {
+                name: document.getElementById('rest-putname').value,
+                country: document.getElementById('rest-putcountry').value,
+                price_per_day: +document.getElementById('rest-putprice').value,
+                activities
+            }, 'put');
+        }
+        async function restPatch() {
+            const id = document.getElementById('rest-patchid').value;
+            await call('PATCH', `${REST}/destinations/${id}`, {
+                price_per_day: +document.getElementById('rest-patchprice').value
+            }, 'patch');
+        }
+        async function restDelete() {
+            const id = document.getElementById('rest-delid').value;
+            await call('DELETE', `${REST}/destinations/${id}`, null, 'del');
+        }
+
+        /* ── GraphQL ── */
+        function gqlPreset(q) { document.getElementById('gql-query').value = q; }
+
+        async function gqlSend() {
+            const query = document.getElementById('gql-query').value.trim();
+            setStatus('gql', null, 'Envoi…');
+            try {
+                const r = await fetch(GQL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query })
+                });
+                const json = await r.json();
+                const ok = !json.errors;
+                setStatus('gql', ok, ok ? 'Succès' : 'Erreur GraphQL');
+                setResponse('gql', fmt(json), ok);
+            } catch (e) {
+                setStatus('gql', false, 'Erreur réseau');
+                setResponse('gql', `❌ Impossible de joindre le serveur GraphQL.\n→ Lancez d'abord : python graphQL/server.py\n\n${e}`, false);
+            }
+        }
+
+        // ── gRPC ──────────────────────────────────────────────────────────────
+        async function grpcCall(sensorId) {
+            document.getElementById('grpc-sensor-id').value = sensorId;
+            await grpcCallCustom();
+        }
+
+        async function grpcCallCustom() {
+            const sensorId = document.getElementById('grpc-sensor-id').value.trim() || 'SN-001';
+            setStatus('grpc', null, 'Appel gRPC en cours…');
+            try {
+                const r = await fetch(`${BRIDGE}/grpc/temperature?sensor_id=${encodeURIComponent(sensorId)}`);
+                const json = await r.json();
+                setStatus('grpc', json.success, json.success
+                    ? `gRPC OK — ${json.response.temperature} ${json.response.unit}`
+                    : 'Erreur gRPC');
+                setResponse('grpc', fmt(json), json.success);
+            } catch (e) {
+                setStatus('grpc', false, 'Erreur réseau');
+                setResponse('grpc', `❌ Impossible de joindre le pont HTTP.\n→ Lancez : python grpc/bridge.py\n→ Lancez : python grpc/server.py\n\n${e}`, false);
+            }
+        }
+
+        async function grpcCheckStatus() {
+            const msg = document.getElementById('grpc-status-msg');
+            msg.textContent = 'Vérification…';
+            msg.style.color = 'var(--muted)';
+            try {
+                const r = await fetch(`${BRIDGE}/grpc/status`);
+                const json = await r.json();
+                msg.textContent = json.online
+                    ? `✅ Serveur gRPC en ligne (${json.host})`
+                    : '❌ Serveur gRPC hors ligne — lancez python grpc/server.py';
+                msg.style.color = json.online ? 'var(--success)' : 'var(--error)';
+            } catch (e) {
+                msg.textContent = '❌ Bridge hors ligne — lancez python grpc/bridge.py';
+                msg.style.color = 'var(--error)';
+            }
+        }
+    </script>
+</body>
+
+</html>

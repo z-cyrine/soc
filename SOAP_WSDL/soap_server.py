@@ -76,7 +76,7 @@ CUSTOMERS_DB = {
         customer_id='CUST001',
         first_name='Cyrine',
         last_name='Zribi',
-        email='cyrine.zribi@example.com',
+        email='cyrine.zribi@telecom-sudparis.eu',
         phone='+33 6 12 34 56 78',
         registration_date=datetime(2024, 1, 15)
     ),
@@ -84,7 +84,7 @@ CUSTOMERS_DB = {
         customer_id='CUST002',
         first_name='Ilef',
         last_name='Rjiba',
-        email='ilef.rjiba@example.com',
+        email='ilef.rjiba@telecom-sudparis.eu',
         phone='+33 6 87 65 43 21',
         registration_date=datetime(2024, 3, 10)
     ),
@@ -92,7 +92,7 @@ CUSTOMERS_DB = {
         customer_id='CUST003',
         first_name='Sarra',
         last_name='Ragguem',
-        email='sarra.ragguem@example.com',
+        email='sarra.ragguem@telecom-sudparis.eu',
         phone='+33 6 87 65 43 22',
         registration_date=datetime(2024, 3, 10)
     )

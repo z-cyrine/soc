@@ -5,11 +5,13 @@ Cas d'usage réel: Les APIs modernes utilisent GraphQL pour la flexibilité des 
 """
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import graphene
 from graphene import Schema, ObjectType, String, Int, Float, List, Field
 from graphql import graphql_sync
 
 app = Flask(__name__)
+CORS(app)
 
 
 #Classe Destination

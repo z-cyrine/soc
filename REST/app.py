@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify, url_for, make_response
+from flask_cors import CORS
 import hashlib
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 # Base de données en mémoire
 destinations = [
