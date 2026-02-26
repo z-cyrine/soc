@@ -1,8 +1,7 @@
 # Dépendances Python pour SOAP/WSDL
 
 # Serveur SOAP
-# Spyne 2.14.0
-git+https://github.com/arskom/spyne.git@master
+spyne==2.14.20          # Serveur SOAP (version stable depuis PyPI)
 lxml==5.1.0             # Parser XML haute performance
 six                     # Dépendance pour Spyne
 
