@@ -118,7 +118,7 @@
         .tab-content {
             display: none;
             padding: 2rem;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -664,33 +664,40 @@
 
         <div class="grid2">
             <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Requête : get_customer_info</h3>
-                <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">Enveloppe XML envoyée par le client :
+                <h3><span class="badge badge-soap">SOAP</span> Scénario 1 — Requête : get_customer_info</h3>
+                <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
+                    <strong>HTTP POST</strong> <code>http://localhost:8000/</code>
                 </p>
-                <div class="code-block"><span class="hl-cmt">&lt;!-- HTTP POST http://localhost:8000 --&gt;</span>
-                    <span class="hl-tag">&lt;soapenv:Envelope</span> <span class="hl-attr">xmlns:soapenv</span>=<span
-                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span>
-                    <span class="hl-attr">xmlns:bank</span>=<span
+                <div class="code-block">&lt;?xml version='1.0' encoding='utf-8'?&gt;
+                    <span class="hl-tag">&lt;soap-env:Envelope</span>
+                    <span class="hl-attr">xmlns:soap-env</span>=<span
+                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span><span
+                        class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;soap-env:Body&gt;</span>
+                    <span class="hl-tag">&lt;ns0:get_customer_info</span>
+                    <span class="hl-attr">xmlns:ns0</span>=<span
                         class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
-                    <span class="hl-tag">&lt;soapenv:Header/&gt;</span>
-                    <span class="hl-tag">&lt;soapenv:Body&gt;</span>
-                    <span class="hl-tag">&lt;bank:get_customer_info&gt;</span>
-                    <span class="hl-tag">&lt;bank:customer_id&gt;</span><span class="hl-str">CUST001</span><span
-                        class="hl-tag">&lt;/bank:customer_id&gt;</span>
-                    <span class="hl-tag">&lt;/bank:get_customer_info&gt;</span>
-                    <span class="hl-tag">&lt;/soapenv:Body&gt;</span>
-                    <span class="hl-tag">&lt;/soapenv:Envelope&gt;</span>
+                    <span class="hl-tag">&lt;ns0:customer_id&gt;</span><span class="hl-str">CUST001</span><span
+                        class="hl-tag">&lt;/ns0:customer_id&gt;</span>
+                    <span class="hl-tag">&lt;/ns0:get_customer_info&gt;</span>
+                    <span class="hl-tag">&lt;/soap-env:Body&gt;</span>
+                    <span class="hl-tag">&lt;/soap-env:Envelope&gt;</span>
                 </div>
             </div>
 
             <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Réponse : Customer</h3>
-                <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">Réponse XML retournée par le serveur
-                    :</p>
-                <div class="code-block"><span class="hl-tag">&lt;soapenv:Envelope</span> <span
-                        class="hl-attr">xmlns:soapenv</span>=<span class="hl-val">"..."</span><span
-                        class="hl-tag">&gt;</span>
-                    <span class="hl-tag">&lt;soapenv:Body&gt;</span>
+                <h3><span class="badge badge-soap">SOAP</span> Scénario 1 — Réponse : get_customer_infoResponse</h3>
+                <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
+                    <strong>HTTP Response</strong> <code>http://localhost:8000/</code> <span style="color:#22c55e;font-weight:600">(status: 200)</span>
+                </p>
+                
+                <div class="code-block">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+                    <span class="hl-tag">&lt;soap11env:Envelope</span>
+                    <span class="hl-attr">xmlns:soap11env</span>=<span
+                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span>
+                    <span class="hl-attr">xmlns:tns</span>=<span
+                        class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;soap11env:Body&gt;</span>
                     <span class="hl-tag">&lt;tns:get_customer_infoResponse&gt;</span>
                     <span class="hl-tag">&lt;tns:get_customer_infoResult&gt;</span>
                     <span class="hl-tag">&lt;tns:customer_id&gt;</span><span class="hl-str">CUST001</span><span
@@ -702,56 +709,141 @@
                     <span class="hl-tag">&lt;tns:email&gt;</span><span
                         class="hl-str">cyrine.zribi@telecom-sudparis.eu</span><span
                         class="hl-tag">&lt;/tns:email&gt;</span>
+                    <span class="hl-tag">&lt;tns:phone&gt;</span><span class="hl-str">+33 6 12 34 56 78</span><span
+                        class="hl-tag">&lt;/tns:phone&gt;</span>
+                    <span class="hl-tag">&lt;tns:registration_date&gt;</span><span
+                        class="hl-str">2024-01-15T00:00:00</span><span
+                        class="hl-tag">&lt;/tns:registration_date&gt;</span>
                     <span class="hl-tag">&lt;/tns:get_customer_infoResult&gt;</span>
                     <span class="hl-tag">&lt;/tns:get_customer_infoResponse&gt;</span>
-                    <span class="hl-tag">&lt;/soapenv:Body&gt;</span>
-                    <span class="hl-tag">&lt;/soapenv:Envelope&gt;</span>
+                    <span class="hl-tag">&lt;/soap11env:Body&gt;</span>
+                    <span class="hl-tag">&lt;/soap11env:Envelope&gt;</span>
                 </div>
             </div>
 
             <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Requête : transfer_money</h3>
-                <div class="code-block"><span class="hl-tag">&lt;bank:transfer_money&gt;</span>
-                    <span class="hl-tag">&lt;bank:from_account&gt;</span><span class="hl-str">ACC001</span><span
-                        class="hl-tag">&lt;/bank:from_account&gt;</span>
-                    <span class="hl-tag">&lt;bank:amount&gt;</span><span class="hl-str">500.00</span><span
-                        class="hl-tag">&lt;/bank:amount&gt;</span>
-                    <span class="hl-tag">&lt;bank:to_account&gt;</span><span class="hl-str">ACC002</span><span
-                        class="hl-tag">&lt;/bank:to_account&gt;</span>
-                    <span class="hl-tag">&lt;bank:description&gt;</span><span class="hl-str">Virement
-                        mensuel</span><span class="hl-tag">&lt;/bank:description&gt;</span>
-                    <span class="hl-tag">&lt;/bank:transfer_money&gt;</span>
-                </div>
-                <p style="font-size:.8rem;color:var(--muted);margin-top:.8rem">
-                    Vérifie : solde suffisant → débit/crédit atomique → génère un <code>transaction_id</code> UUID.
+                <h3><span class="badge badge-soap">SOAP</span> Scénario 2 — Requête : transfer_money</h3>
+                <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
+                    <strong>HTTP POST</strong> <code>http://localhost:8000/</code>
                 </p>
+                <div class="code-block">&lt;?xml version='1.0' encoding='utf-8'?&gt;
+                    <span class="hl-tag">&lt;soap-env:Envelope</span>
+                    <span class="hl-attr">xmlns:soap-env</span>=<span
+                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span><span
+                        class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;soap-env:Body&gt;</span>
+                    <span class="hl-tag">&lt;ns0:transfer_money</span>
+                    <span class="hl-attr">xmlns:ns0</span>=<span
+                        class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;ns0:from_account&gt;</span><span class="hl-str">ACC001</span><span
+                        class="hl-tag">&lt;/ns0:from_account&gt;</span>
+                    <span class="hl-tag">&lt;ns0:amount&gt;</span><span class="hl-str">300.0</span><span
+                        class="hl-tag">&lt;/ns0:amount&gt;</span>
+                    <span class="hl-tag">&lt;ns0:to_account&gt;</span><span class="hl-str">ACC002</span><span
+                        class="hl-tag">&lt;/ns0:to_account&gt;</span>
+                    <span class="hl-tag">&lt;ns0:description&gt;</span><span class="hl-str">Épargne
+                        mensuelle</span><span class="hl-tag">&lt;/ns0:description&gt;</span>
+                    <span class="hl-tag">&lt;/ns0:transfer_money&gt;</span>
+                    <span class="hl-tag">&lt;/soap-env:Body&gt;</span>
+                    <span class="hl-tag">&lt;/soap-env:Envelope&gt;</span>
+                </div>
             </div>
 
             <div class="panel">
-                <h3><span class="badge badge-soap">WSDL</span> Types complexes auto-générés</h3>
-                <div class="code-block"><span class="hl-cmt">&lt;!-- Extrait du WSDL auto-généré par Spyne --&gt;</span>
-                    <span class="hl-cmt">&lt;!-- GET http://localhost:8000/?wsdl --&gt;</span>
+                <h3><span class="badge badge-soap">SOAP</span> Scénario 2 — Réponse : transfer_moneyResponse</h3>
+                <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
+                    <strong>HTTP Response</strong> <code>http://localhost:8000/</code> <span style="color:#22c55e;font-weight:600">(status: 200)</span>
+                </p>
+                <div class="code-block">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+                    <span class="hl-tag">&lt;soap11env:Envelope</span>
+                    <span class="hl-attr">xmlns:soap11env</span>=<span
+                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span>
+                    <span class="hl-attr">xmlns:tns</span>=<span
+                        class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
+                    <span class="hl-tag">&lt;soap11env:Body&gt;</span>
+                    <span class="hl-tag">&lt;tns:transfer_moneyResponse&gt;</span>
+                    <span class="hl-tag">&lt;tns:transfer_moneyResult&gt;</span>
+                    <span class="hl-tag">&lt;tns:success&gt;</span><span class="hl-str">true</span><span
+                        class="hl-tag">&lt;/tns:success&gt;</span>
+                    <span class="hl-tag">&lt;tns:transaction_id&gt;</span><span class="hl-str">TXN8838A72B</span><span
+                        class="hl-tag">&lt;/tns:transaction_id&gt;</span>
+                    <span class="hl-tag">&lt;tns:message&gt;</span><span class="hl-str">Transfert réussi de 300.0
+                        EUR</span><span class="hl-tag">&lt;/tns:message&gt;</span>
+                    <span class="hl-tag">&lt;tns:new_balance&gt;</span><span class="hl-str">4700.0</span><span
+                        class="hl-tag">&lt;/tns:new_balance&gt;</span>
+                    <span class="hl-tag">&lt;/tns:transfer_moneyResult&gt;</span>
+                    <span class="hl-tag">&lt;/tns:transfer_moneyResponse&gt;</span>
+                    <span class="hl-tag">&lt;/soap11env:Body&gt;</span>
+                    <span class="hl-tag">&lt;/soap11env:Envelope&gt;</span>
+                </div>
+            </div>
 
-                    <span class="hl-tag">&lt;xs:complexType</span> <span class="hl-attr">name</span>=<span
-                        class="hl-val">"Customer"</span><span class="hl-tag">&gt;</span>
-                    <span class="hl-tag">&lt;xs:sequence&gt;</span>
-                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
-                        class="hl-val">"customer_id"</span> <span class="hl-attr">type</span>=<span
-                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
-                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
-                        class="hl-val">"first_name"</span> <span class="hl-attr">type</span>=<span
-                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
-                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
-                        class="hl-val">"last_name"</span> <span class="hl-attr">type</span>=<span
-                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
-                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
-                        class="hl-val">"email"</span> <span class="hl-attr">type</span>=<span
-                        class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
-                    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span
-                        class="hl-val">"balance"</span> <span class="hl-attr">type</span>=<span
-                        class="hl-val">"xs:float"</span><span class="hl-tag">/&gt;</span>
-                    <span class="hl-tag">&lt;/xs:sequence&gt;</span>
-                    <span class="hl-tag">&lt;/xs:complexType&gt;</span>
+            <div class="panel" style="grid-column: 1 / -1">
+                <h3><span class="badge badge-soap">WSDL</span> Structure du WSDL auto-généré — <code style="font-size:.8rem;color:var(--muted)">GET http://localhost:8000/?wsdl</code></h3>
+                <p style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">Le WSDL est divisé en 5 sections. Voici un exemple de chacune :</p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+
+                    <div>
+                        <p style="font-size:.78rem;font-weight:700;color:#a78bfa;margin-bottom:.4rem">① &lt;wsdl:types&gt; — Schémas XSD des données</p>
+                        <div class="code-block" style="font-size:.72rem"><span class="hl-tag">&lt;xs:complexType</span> <span class="hl-attr">name</span>=<span class="hl-val">"Customer"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;xs:sequence&gt;</span>
+    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span class="hl-val">"customer_id"</span>  <span class="hl-attr">type</span>=<span class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span class="hl-val">"first_name"</span>   <span class="hl-attr">type</span>=<span class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span class="hl-val">"last_name"</span>    <span class="hl-attr">type</span>=<span class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span class="hl-val">"email"</span>        <span class="hl-attr">type</span>=<span class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span class="hl-val">"phone"</span>        <span class="hl-attr">type</span>=<span class="hl-val">"xs:string"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;xs:element</span> <span class="hl-attr">name</span>=<span class="hl-val">"registration_date"</span> <span class="hl-attr">type</span>=<span class="hl-val">"xs:dateTime"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;/xs:sequence&gt;</span>
+<span class="hl-tag">&lt;/xs:complexType&gt;</span></div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:.78rem;font-weight:700;color:#a78bfa;margin-bottom:.4rem">② &lt;wsdl:message&gt; — Enveloppes d'entrée/sortie</p>
+                        <div class="code-block" style="font-size:.72rem"><span class="hl-tag">&lt;wsdl:message</span> <span class="hl-attr">name</span>=<span class="hl-val">"get_customer_info"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;wsdl:part</span> <span class="hl-attr">name</span>=<span class="hl-val">"get_customer_info"</span>
+    <span class="hl-attr">element</span>=<span class="hl-val">"tns:get_customer_info"</span><span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/wsdl:message&gt;</span>
+
+<span class="hl-tag">&lt;wsdl:message</span> <span class="hl-attr">name</span>=<span class="hl-val">"get_customer_infoResponse"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;wsdl:part</span> <span class="hl-attr">name</span>=<span class="hl-val">"get_customer_infoResponse"</span>
+    <span class="hl-attr">element</span>=<span class="hl-val">"tns:get_customer_infoResponse"</span><span class="hl-tag">/&gt;</span>
+<span class="hl-tag">&lt;/wsdl:message&gt;</span>
+</div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:.78rem;font-weight:700;color:#a78bfa;margin-bottom:.4rem">③ &lt;wsdl:portType&gt; — Interface abstraite (opérations)</p>
+                        <div class="code-block" style="font-size:.72rem"><span class="hl-tag">&lt;wsdl:portType</span> <span class="hl-attr">name</span>=<span class="hl-val">"Application"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;wsdl:operation</span> <span class="hl-attr">name</span>=<span class="hl-val">"get_customer_info"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;wsdl:input</span>  <span class="hl-attr">message</span>=<span class="hl-val">"tns:get_customer_info"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;wsdl:output</span> <span class="hl-attr">message</span>=<span class="hl-val">"tns:get_customer_infoResponse"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;/wsdl:operation&gt;</span>
+<span class="hl-tag">&lt;/wsdl:portType&gt;</span></div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:.78rem;font-weight:700;color:#a78bfa;margin-bottom:.4rem">④ &lt;wsdl:binding&gt; — Liaison concrète SOAP 1.1</p>
+                        <div class="code-block" style="font-size:.72rem"><span class="hl-tag">&lt;wsdl:binding</span> <span class="hl-attr">name</span>=<span class="hl-val">"Application"</span> <span class="hl-attr">type</span>=<span class="hl-val">"tns:Application"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;wsdlsoap11:binding</span> <span class="hl-attr">style</span>=<span class="hl-val">"document"</span>
+    <span class="hl-attr">transport</span>=<span class="hl-val">"http://schemas.xmlsoap.org/soap/http"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;wsdl:operation</span> <span class="hl-attr">name</span>=<span class="hl-val">"get_customer_info"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;wsdlsoap11:operation</span> <span class="hl-attr">soapAction</span>=<span class="hl-val">"get_customer_info"</span><span class="hl-tag">/&gt;</span>
+    <span class="hl-tag">&lt;wsdl:input</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;wsdlsoap11:body</span> <span class="hl-attr">use</span>=<span class="hl-val">"literal"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/wsdl:input&gt;</span>
+    <span class="hl-tag">&lt;wsdl:output</span><span class="hl-tag">&gt;</span><span class="hl-tag">&lt;wsdlsoap11:body</span> <span class="hl-attr">use</span>=<span class="hl-val">"literal"</span><span class="hl-tag">/&gt;</span><span class="hl-tag">&lt;/wsdl:output&gt;</span>
+  <span class="hl-tag">&lt;/wsdl:operation&gt;</span>
+<span class="hl-tag">&lt;/wsdl:binding&gt;</span></div>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:1rem">
+                    <p style="font-size:.78rem;font-weight:700;color:#a78bfa;margin-bottom:.4rem">⑤ &lt;wsdl:service&gt; — Point d'accès réseau</p>
+                    <div class="code-block" style="font-size:.72rem"><span class="hl-tag">&lt;wsdl:service</span> <span class="hl-attr">name</span>=<span class="hl-val">"BankingService"</span><span class="hl-tag">&gt;</span>
+  <span class="hl-tag">&lt;wsdl:port</span> <span class="hl-attr">name</span>=<span class="hl-val">"Application"</span> <span class="hl-attr">binding</span>=<span class="hl-val">"tns:Application"</span><span class="hl-tag">&gt;</span>
+    <span class="hl-tag">&lt;wsdlsoap11:address</span> <span class="hl-attr">location</span>=<span class="hl-val">"http://localhost:8000/"</span><span class="hl-tag">/&gt;</span>
+  <span class="hl-tag">&lt;/wsdl:port&gt;</span>
+<span class="hl-tag">&lt;/wsdl:service&gt;</span></div>
                 </div>
             </div>
         </div>
@@ -866,7 +958,7 @@
             </div>
 
             <div class="panel">
-                <h3>📥 Réponse GraphQL</h3>
+                <h3>Réponse GraphQL</h3>
                 <div class="response-box" style="max-height:420px" id="r-gql">En attente d'une requête…</div>
                 <p style="font-size:.75rem;color:var(--muted);margin-top:.6rem">
                     💡 Seuls les champs demandés sont retournés — c'est la <strong>sélection de champs</strong> GraphQL.
@@ -936,16 +1028,16 @@
             <div class="code-block">syntax = <span class="hl-val">"proto3"</span>;
 package sensorservice;
 
-<span class="hl-cmt">// Service exposé</span>
-service Sensor {
-  rpc <span class="hl-type">GetTemperature</span> (<span class="hl-type">SensorRequest</span>)
-      returns (<span class="hl-type">SensorResponse</span>);
-}
+                    <span class="hl-cmt">// Service exposé</span>
+                    service Sensor {
+                    rpc <span class="hl-type">GetTemperature</span> (<span class="hl-type">SensorRequest</span>)
+                    returns (<span class="hl-type">SensorResponse</span>);
+                    }
 
-<span class="hl-cmt">// Requête : identifiant du capteur</span>
-message <span class="hl-type">SensorRequest</span> {
-  string sensor_id = 1;
-}
+                    <span class="hl-cmt">// Requête : identifiant du capteur</span>
+                    message <span class="hl-type">SensorRequest</span> {
+                    string sensor_id = 1;
+                    }
 
 <span class="hl-cmt">// Réponse : température + unité</span>
 message <span class="hl-type">SensorResponse</span> {
