@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify, url_for, make_response
 from flask_cors import CORS
 import hashlib
 import json
+import subprocess
+import os
+import sys
 
 app = Flask(__name__)
 CORS(app)
@@ -396,6 +399,109 @@ def delete_destination(id):
     response.headers['Link'] = f'<{url_for("get_destinations", _external=True)}>; rel="collection"'
     
     return response
+
+# ═══════════════════════════════════════════════════════ gRPC ═══
+
+@app.route('/run-grpc-server', methods=['POST'])
+def run_grpc_server():
+    """
+    Lance le serveur gRPC (grpc/server.py)
+    """
+    try:
+        # Déterminer le répertoire du projet
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        grpc_server_path = os.path.join(base_dir, 'grpc', 'server.py')
+        
+        # Lancer le serveur en arrière-plan avec un timeout court pour capturer la sortie initiale
+        result = subprocess.run(
+            [sys.executable, grpc_server_path],
+            cwd=os.path.join(base_dir, 'grpc'),
+            capture_output=True,
+            text=True,
+            timeout=2
+        )
+        
+        output = result.stdout + result.stderr
+        
+        return jsonify({
+            "success": True,
+            "output": output if output else "Serveur gRPC en cours de démarrage sur le port 50051..."
+        }), 200
+    except subprocess.TimeoutExpired:
+        # Le timeout est attendu car le serveur reste actif
+        return jsonify({
+            "success": True,
+            "output": "Serveur gRPC lancé avec succès sur le port 50051"
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/run-grpc-client', methods=['POST'])
+def run_grpc_client():
+    """
+    Lance le client gRPC (grpc/client.py) avec un sensor_id optionnel
+    """
+    try:
+        data = request.get_json() or {}
+        sensor_id = data.get('sensor_id', 'SN-001')
+        
+        # Déterminer le répertoire du projet
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        grpc_client_path = os.path.join(base_dir, 'grpc', 'client.py')
+        
+        # Créer un script temporaire qui appelle le client avec le sensor_id
+        client_code = f"""
+import grpc
+import sensor_pb2
+import sensor_pb2_grpc
+
+def run():
+    with grpc.insecure_channel('localhost:50051') as channel:
+        stub = sensor_pb2_grpc.SensorStub(channel)   
+        response = stub.GetTemperature(sensor_pb2.SensorRequest(sensor_id="{sensor_id}"))
+        
+    print(f"Capteur: {sensor_id}")
+    print(f"Température: {{response.temperature}}°{{response.unit}}")
+    print(f"\\nRéponse gRPC reçue avec succès!")
+
+if __name__ == '__main__':
+    run()
+"""
+        
+        # Lancer le client
+        result = subprocess.run(
+            [sys.executable, '-c', client_code],
+            cwd=os.path.join(base_dir, 'grpc'),
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        
+        if result.returncode == 0:
+            output = result.stdout
+            return jsonify({
+                "success": True,
+                "output": output
+            }), 200
+        else:
+            error = result.stderr
+            return jsonify({
+                "success": False,
+                "error": error if error else "Erreur lors de l'exécution du client gRPC"
+            }), 500
+    except subprocess.TimeoutExpired:
+        return jsonify({
+            "success": False,
+            "error": "Timeout: le serveur gRPC n'a pas répondu. Assurez-vous qu'il est lancé."
+        }), 500
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 if __name__ == '__main__':
     print("REST API started on http://localhost:5000")

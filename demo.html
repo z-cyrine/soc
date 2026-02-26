@@ -227,7 +227,7 @@
         }
 
         .btn-gql {
-            background: var(--graphql);
+            background: var (--graphql);
             color: #fff;
         }
 
@@ -322,7 +322,7 @@
         select {
             background: var(--card);
             border: 1px solid var(--border);
-            color: var(--text);
+            color: var (--text);
             border-radius: 8px;
             padding: .55rem .8rem;
             font-size: .85rem;
@@ -772,7 +772,7 @@
                         <td style="padding:.6rem"><code>customer_id</code></td>
                         <td style="padding:.6rem"><code>Customer</code></td>
                     </tr>
-                    <tr style="border-bottom:1px solid var(--border)">
+                    <tr style="border-bottom:1px solid var (--border)">
                         <td style="padding:.6rem"><code>get_account_balance</code></td>
                         <td style="padding:.6rem"><code>account_number</code></td>
                         <td style="padding:.6rem"><code>Account</code></td>
@@ -888,77 +888,52 @@
             gRPC utilise <strong>Protocol Buffers</strong> (Protobuf) comme format de sérialisation binaire
             et <strong>HTTP/2</strong> comme transport. Le fichier <code>sensor.proto</code> définit le contrat —
             les fichiers <code>sensor_pb2.py</code> et <code>sensor_pb2_grpc.py</code> sont
-            <strong>auto-générés</strong> par <code>protoc</code>. La démo passe par un pont HTTP
-            (<code>bridge.py</code>) qui appelle le vrai serveur gRPC en temps réel.
-        </div>
-
-        <!-- FLOW -->
-        <div class="flow" style="margin-bottom:1.5rem">
-            <div class="flow-box" style="border-color:#0891b2">🌐 Navigateur</div>
-            <span class="flow-arrow">→ HTTP →</span>
-            <div class="flow-box" style="border-color:#0891b2">bridge.py <span style="font-size:.7rem;color:var(--muted)">:8083</span></div>
-            <span class="flow-arrow">→ gRPC / HTTP2 →</span>
-            <div class="flow-box" style="border-color:#0891b2">server.py <span style="font-size:.7rem;color:var(--muted)">:50051</span></div>
-            <span class="flow-arrow">→ Protobuf →</span>
-            <div class="flow-box" style="border-color:var(--success)">22.5 Celsius</div>
-        </div>
-
-        <!-- INSTRUCTIONS DÉMARRAGE -->
-        <div class="panel" style="border-color:#0e7490;margin-bottom:1.5rem">
-            <h3 style="color:#38bdf8">⚡ Démarrer les serveurs</h3>
-            <div class="grid2" style="gap:1rem">
-                <div>
-                    <p style="font-size:.82rem;font-weight:600;margin-bottom:.4rem;color:#38bdf8">1. Serveur gRPC — server.py</p>
-                    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">Écoute sur le port <strong>50051</strong>. Reçoit un <code>sensor_id</code>, retourne une température simulée de 22.5°C.</p>
-                    <div class="code-block" style="padding:.6rem 1rem;font-size:.8rem">python grpc/server.py
-<span style="color:#22c55e">Serveur gRPC lancé sur le port 50051...</span></div>
-                </div>
-                <div>
-                    <p style="font-size:.82rem;font-weight:600;margin-bottom:.4rem;color:#38bdf8">2. Pont HTTP → gRPC — bridge.py</p>
-                    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem">Expose le service gRPC via HTTP sur le port <strong>8083</strong> pour que le navigateur puisse l'appeler.</p>
-                    <div class="code-block" style="padding:.6rem 1rem;font-size:.8rem">python grpc/bridge.py
-<span style="color:#22c55e">Pont HTTP → gRPC — port 8083
-GET /grpc/temperature?sensor_id=SN-001</span></div>
-                </div>
-            </div>
-            <div style="margin-top:.8rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">
-                <button class="btn btn-grpc btn-sm" onclick="grpcCheckStatus()">🔍 Vérifier les serveurs</button>
-                <span id="grpc-status-msg" style="font-size:.8rem;color:var(--muted)">Cliquez pour vérifier l'état</span>
-            </div>
+            <strong>auto-générés</strong> par <code>protoc</code>.
         </div>
 
         <div class="grid2">
-            <!-- APPELS LIVE -->
+            <!-- SERVEUR gRPC -->
             <div class="panel">
-                <h3><span class="badge badge-grpc">RPC</span> Appel — GetTemperature</h3>
+                <h3><span class="badge badge-grpc">SERVEUR</span> Lancer le serveur gRPC</h3>
                 <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">
-                    Correspond exactement à l'appel de <code>client.py</code> :<br>
-                    <code style="color:#38bdf8">stub.GetTemperature(SensorRequest(sensor_id="SN-001"))</code>
+                    Le serveur gRPC écoute sur le port <strong>50051</strong>. Reçoit un <code>sensor_id</code>, retourne une température simulée de 22.5°C.
                 </p>
-                <p style="font-size:.82rem;font-weight:600;margin-bottom:.6rem">Choisir un capteur :</p>
-                <div class="input-row" style="flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
-                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('SN-001')">▶ SN-001</button>
-                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('SN-002')">▶ SN-002</button>
-                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('SENSOR-LAB-A')">▶ SENSOR-LAB-A</button>
-                    <button class="btn btn-grpc btn-sm" onclick="grpcCall('CAPTEUR-42')">▶ CAPTEUR-42</button>
-                </div>
-                <div class="input-row" style="margin-bottom:1rem">
-                    <label>ID libre :</label>
-                    <input type="text" id="grpc-sensor-id" value="SN-001" style="width:140px">
-                    <button class="btn btn-grpc" onclick="grpcCallCustom()">▶ Envoyer</button>
+                <div class="input-row">
+                    <button class="btn btn-grpc" onclick="grpcStartServer()">▶ Démarrer le serveur</button>
                 </div>
                 <div class="status-bar">
-                    <span class="status-dot idle" id="s-grpc"></span>
-                    <span id="st-grpc">Inactif</span>
+                    <span class="status-dot idle" id="s-grpc-server"></span>
+                    <span id="st-grpc-server">Inactif</span>
                 </div>
-                <div class="response-box" id="r-grpc">En attente d'un appel…</div>
+                <label style="display:block;margin-top:.8rem;margin-bottom:.4rem">Sortie du serveur :</label>
+                <div class="response-box" style="max-height:280px;min-height:120px" id="r-grpc-server">En attente…</div>
             </div>
 
-            <!-- PROTO -->
+            <!-- CLIENT gRPC -->
             <div class="panel">
-                <h3><span class="badge badge-grpc">PROTO</span> Contrat — sensor.proto</h3>
-                <p style="font-size:.8rem;color:var(--muted);margin-bottom:.8rem">Source de vérité du service — définit les messages et le service RPC :</p>
-                <div class="code-block">syntax = <span class="hl-val">"proto3"</span>;
+                <h3><span class="badge badge-grpc">CLIENT</span> Appeler le serveur gRPC</h3>
+                <p style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem">
+                    Envoie une requête <code>SensorRequest</code> au serveur et récupère la température.
+                </p>
+                <div class="input-row">
+                    <label>Capteur ID :</label>
+                    <input type="text" id="grpc-sensor-id" value="SN-001" style="width:140px">
+                    <button class="btn btn-grpc" onclick="grpcCallClient()">▶ Lancer le client</button>
+                </div>
+                <div class="status-bar">
+                    <span class="status-dot idle" id="s-grpc-client"></span>
+                    <span id="st-grpc-client">Inactif</span>
+                </div>
+                <label style="display:block;margin-top:.8rem;margin-bottom:.4rem">Résultat du client :</label>
+                <div class="response-box" style="max-height:220px;min-height:100px" id="r-grpc-client">En attente…</div>
+            </div>
+        </div>
+
+        <!-- PROTO -->
+        <div class="panel">
+            <h3><span class="badge badge-grpc">PROTO</span> Contrat — sensor.proto</h3>
+            <p style="font-size:.8rem;color:var(--muted);margin-bottom:.8rem">Source de vérité du service — définit les messages et le service RPC :</p>
+            <div class="code-block">syntax = <span class="hl-val">"proto3"</span>;
 package sensorservice;
 
 <span class="hl-cmt">// Service exposé</span>
@@ -977,48 +952,9 @@ message <span class="hl-type">SensorResponse</span> {
   float  temperature = 1;
   string unit        = 2;
 }</div>
-                <p style="font-size:.75rem;color:var(--muted);margin-top:.8rem">
-                    Compilé avec <code>protoc</code> → génère <code>sensor_pb2.py</code> + <code>sensor_pb2_grpc.py</code>
-                </p>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h3>⚡ gRPC vs REST — Pourquoi gRPC ?</h3>
-            <table style="width:100%;border-collapse:collapse;font-size:.82rem">
-                <thead><tr style="border-bottom:1px solid var(--border);color:var(--muted)">
-                    <th style="text-align:left;padding:.5rem">Critère</th>
-                    <th style="text-align:center;padding:.5rem">REST / JSON</th>
-                    <th style="text-align:center;padding:.5rem">gRPC / Protobuf</th>
-                </tr></thead>
-                <tbody>
-                    <tr style="border-bottom:1px solid var(--border)">
-                        <td style="padding:.5rem">Protocole</td>
-                        <td style="text-align:center">HTTP/1.1</td>
-                        <td style="text-align:center;color:#38bdf8">HTTP/2</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border)">
-                        <td style="padding:.5rem">Format</td>
-                        <td style="text-align:center">Texte JSON</td>
-                        <td style="text-align:center;color:#38bdf8">Binaire Protobuf</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border)">
-                        <td style="padding:.5rem">Performance</td>
-                        <td style="text-align:center">Normale</td>
-                        <td style="text-align:center;color:#38bdf8">~10× plus rapide</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border)">
-                        <td style="padding:.5rem">Contrat d'interface</td>
-                        <td style="text-align:center">Implicite (URLs)</td>
-                        <td style="text-align:center;color:#38bdf8">Explicite (.proto)</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:.5rem">Cas d'usage</td>
-                        <td style="text-align:center">APIs publiques web</td>
-                        <td style="text-align:center;color:#38bdf8">Microservices / IoT</td>
-                    </tr>
-                </tbody>
-            </table>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:.8rem">
+                Compilé avec <code>protoc</code> → génère <code>sensor_pb2.py</code> + <code>sensor_pb2_grpc.py</code>
+            </p>
         </div>
 
     </div>
@@ -1132,41 +1068,47 @@ message <span class="hl-type">SensorResponse</span> {
         }
 
         // ── gRPC ──────────────────────────────────────────────────────────────
-        async function grpcCall(sensorId) {
-            document.getElementById('grpc-sensor-id').value = sensorId;
-            await grpcCallCustom();
-        }
-
-        async function grpcCallCustom() {
-            const sensorId = document.getElementById('grpc-sensor-id').value.trim() || 'SN-001';
-            setStatus('grpc', null, 'Appel gRPC en cours…');
+        async function grpcStartServer() {
+            setStatus('grpc-server', null, 'Démarrage du serveur...');
             try {
-                const r = await fetch(`${BRIDGE}/grpc/temperature?sensor_id=${encodeURIComponent(sensorId)}`);
-                const json = await r.json();
-                setStatus('grpc', json.success, json.success
-                    ? `gRPC OK — ${json.response.temperature} ${json.response.unit}`
-                    : 'Erreur gRPC');
-                setResponse('grpc', fmt(json), json.success);
+                const response = await fetch('http://localhost:5000/run-grpc-server', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const json = await response.json();
+                if (json.success) {
+                    setStatus('grpc-server', true, 'Serveur en ligne');
+                    setResponse('grpc-server', `✅ Serveur gRPC lancé sur le port 50051\n\nSortie:\n${json.output}`, true);
+                } else {
+                    setStatus('grpc-server', false, 'Erreur');
+                    setResponse('grpc-server', `❌ Erreur au démarrage:\n${json.error}`, false);
+                }
             } catch (e) {
-                setStatus('grpc', false, 'Erreur réseau');
-                setResponse('grpc', `❌ Impossible de joindre le pont HTTP.\n→ Lancez : python grpc/bridge.py\n→ Lancez : python grpc/server.py\n\n${e}`, false);
+                setStatus('grpc-server', false, 'Erreur réseau');
+                setResponse('grpc-server', `❌ Impossible de joindre le serveur REST.\n\nAssurez-vous que REST/app.py est lancé.\n\n${e}`, false);
             }
         }
 
-        async function grpcCheckStatus() {
-            const msg = document.getElementById('grpc-status-msg');
-            msg.textContent = 'Vérification…';
-            msg.style.color = 'var(--muted)';
+        async function grpcCallClient() {
+            const sensorId = document.getElementById('grpc-sensor-id').value.trim() || 'SN-001';
+            setStatus('grpc-client', null, 'Lancement du client...');
             try {
-                const r = await fetch(`${BRIDGE}/grpc/status`);
-                const json = await r.json();
-                msg.textContent = json.online
-                    ? `✅ Serveur gRPC en ligne (${json.host})`
-                    : '❌ Serveur gRPC hors ligne — lancez python grpc/server.py';
-                msg.style.color = json.online ? 'var(--success)' : 'var(--error)';
+                const response = await fetch('http://localhost:5000/run-grpc-client', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sensor_id: sensorId })
+                });
+                const json = await response.json();
+                if (json.success) {
+                    setStatus('grpc-client', true, 'Client exécuté');
+                    setResponse('grpc-client', `✅ Réponse du serveur gRPC:\n\n${json.output}`, true);
+                } else {
+                    setStatus('grpc-client', false, 'Erreur');
+                    setResponse('grpc-client', `❌ Erreur lors de l'exécution du client:\n${json.error}`, false);
+                }
             } catch (e) {
-                msg.textContent = '❌ Bridge hors ligne — lancez python grpc/bridge.py';
-                msg.style.color = 'var(--error)';
+                setStatus('grpc-client', false, 'Erreur réseau');
+                setResponse('grpc-client', `❌ Impossible de joindre le serveur REST.\n\nAssurez-vous que:\n  1. python REST/app.py\n  2. python grpc/server.py\n\n${e}`, false);
             }
         }
     </script>
