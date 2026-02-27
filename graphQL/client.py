@@ -181,7 +181,9 @@ class TravelPlannerClient:
                 country: "{country}"
                 pricePerDay: {price_per_day}
                 activities: [{activities_str}]
-            }}) {{
+            }}) 
+            
+            {{
                 success
                 message
                 destination {{
