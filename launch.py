@@ -34,29 +34,29 @@ def print_header(text):
 
 def print_success(text):
     """Afficher un message de succès"""
-    print(f"{Colors.GREEN}✅{Colors.NC} {text}")
+    print(f"{Colors.GREEN}[OK]{Colors.NC} {text}")
 
 def print_error(text):
     """Afficher un message d'erreur"""
-    print(f"{Colors.RED}❌{Colors.NC} {text}")
+    print(f"{Colors.RED}[ERREUR]{Colors.NC} {text}")
 
 def print_info(text):
     """Afficher un message d'information"""
-    print(f"{Colors.BLUE}ℹ️{Colors.NC} {text}")
+    print(f"{Colors.BLUE}[INFO]{Colors.NC} {text}")
 
 def print_warning(text):
     """Afficher un avertissement"""
-    print(f"{Colors.YELLOW}⚠️{Colors.NC} {text}")
+    print(f"{Colors.YELLOW}[ATTENTION]{Colors.NC} {text}")
 
 def check_files():
     """Vérifier que tous les fichiers nécessaires existent"""
-    print_header("🌐 LANCEMENT DE L'INTERFACE SOC")
+    print_header("LANCEMENT DE L'INTERFACE SOC")
     print("REST · SOAP/WSDL · GraphQL · gRPC")
     print()
     print_info(f"Répertoire de base: {SCRIPT_DIR}")
     print()
     
-    print("📋 Vérification des fichiers...")
+    print("Vérification des fichiers...")
     print()
     
     files_to_check = [
@@ -78,7 +78,7 @@ def check_files():
     
     if missing:
         print()
-        print_header(f"{Colors.RED}❌ ERREURS - Fichiers manquants{Colors.NC}")
+        print_header(f"{Colors.RED}ERREURS - Fichiers manquants{Colors.NC}")
         sys.exit(1)
     
     print()
@@ -87,7 +87,7 @@ def check_files():
 
 def install_requirements():
     """Installer les dépendances de tous les modules"""
-    print("📦 Installation des dépendances...")
+    print("Installation des dépendances...")
     print()
     
     modules = ["REST", "graphQL", "SOAP_WSDL", "grpc"]
@@ -96,7 +96,7 @@ def install_requirements():
         req_path = SCRIPT_DIR / module / "requirements.txt"
         
         if req_path.exists():
-            print(f"  📥 Installation de {module}/requirements.txt...")
+            print(f"  Installation de {module}/requirements.txt...")
             try:
                 subprocess.run(
                     [sys.executable, "-m", "pip", "install", "-q", "-r", str(req_path)],
@@ -133,7 +133,7 @@ def start_server(name, module, script, port):
 
 def start_servers():
     """Démarrer tous les serveurs"""
-    print_header("🚀 Démarrage des serveurs...")
+    print_header("Démarrage des serveurs...")
     
     start_server("REST API", "REST", "app.py", "5000")
     start_server("GraphQL Server", "graphQL", "server.py", "5001")
@@ -141,13 +141,13 @@ def start_servers():
     start_server("gRPC Server", "grpc", "server.py", "50051")
     
     print()
-    print("⏳ Attente du démarrage des serveurs (5 secondes)...")
+    print("Attente du démarrage des serveurs (5 secondes)...")
     time.sleep(5)
     print()
 
 def open_browser():
     """Ouvrir le navigateur avec le fichier HTML"""
-    print("🌐 Ouverture de l'interface...")
+    print("Ouverture de l'interface...")
     print()
     
     html_file = SCRIPT_DIR / "demo.html"
@@ -164,7 +164,7 @@ def open_browser():
 
 def show_instructions():
     """Afficher les instructions finales"""
-    print_header("✅ TOUS LES SERVEURS SONT LANCÉS")
+    print_header("TOUS LES SERVEURS SONT LANCES")
     
     print("Serveurs en cours d'exécution:")
     print("  • REST API           → http://localhost:5000")
@@ -176,7 +176,7 @@ def show_instructions():
     print(f"  • file://{SCRIPT_DIR / 'demo.html'}")
     print()
     
-    print_header("📝 COMMANDES DISPONIBLES")
+    print_header("COMMANDES DISPONIBLES")
     print("  • Appuyez sur Ctrl+C pour arrêter tous les serveurs")
     print("  • Fermez le navigateur quand vous avez terminé")
     print()
@@ -185,7 +185,7 @@ def cleanup(signum=None, frame=None):
     """Arrêter tous les serveurs"""
     print()
     print()
-    print_header("🛑 ARRÊT DES SERVEURS")
+    print_header("ARRET DES SERVEURS")
     
     for proc in PROCESSES:
         try:

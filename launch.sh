@@ -14,16 +14,16 @@ SCRIPT_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 
 echo ""
 echo "======================================================================"
-echo "🌐 LANCEMENT DE L'INTERFACE SOC"
+echo "LANCEMENT DE L'INTERFACE SOC"
 echo "======================================================================"
 echo "REST · SOAP/WSDL · GraphQL · gRPC"
 echo "======================================================================"
 echo ""
-echo "📍 Répertoire de base: $SCRIPT_DIR"
+echo "Repertoire de base: $SCRIPT_DIR"
 echo ""
 
 # Vérifier que les fichiers existent
-echo "📋 Vérification des fichiers..."
+echo "Verification des fichiers..."
 echo ""
 
 MISSING=0
@@ -32,10 +32,10 @@ check_file() {
     local file_path="$1"
     local file_name="$2"
     if [ ! -f "$file_path" ]; then
-        echo -e "  ${RED}❌${NC} $file_name non trouvé"
+        echo -e "  ${RED}MANQUANT${NC} $file_name non trouve"
         MISSING=1
     else
-        echo -e "  ${GREEN}✅${NC} $file_name"
+        echo -e "  ${GREEN}OK${NC} $file_name"
     fi
 }
 
@@ -48,17 +48,17 @@ check_file "$SCRIPT_DIR/demo.html" "Interface HTML: demo.html"
 if [ $MISSING -eq 1 ]; then
     echo ""
     echo "======================================================================"
-    echo -e "${RED}❌ ERREURS - Fichiers manquants${NC}"
+    echo -e "${RED}ERREURS - Fichiers manquants${NC}"
     echo "======================================================================"
     exit 1
 fi
 
 echo ""
-echo -e "${GREEN}✅ Tous les fichiers sont présents!${NC}"
+echo -e "${GREEN}Tous les fichiers sont presents!${NC}"
 echo ""
 
 # Installer les dépendances
-echo "📦 Installation des dépendances..."
+echo "Installation des dependances..."
 echo ""
 
 install_requirements() {
@@ -66,9 +66,9 @@ install_requirements() {
     local req_path="$SCRIPT_DIR/$req_dir/requirements.txt"
     
     if [ -f "$req_path" ]; then
-        echo -e "  📥 Installation de $req_dir/requirements.txt..."
+        echo -e "  Installation de $req_dir/requirements.txt..."
         python3 -m pip install -q -r "$req_path" 2>/dev/null || true
-        echo -e "     ${GREEN}✅${NC} $req_dir - OK"
+        echo -e "     ${GREEN}OK${NC} $req_dir"
     fi
 }
 
@@ -78,7 +78,7 @@ install_requirements "SOAP_WSDL"
 install_requirements "grpc"
 
 echo ""
-echo -e "${GREEN}✅ Installation terminée!${NC}"
+echo -e "${GREEN}Installation terminee!${NC}"
 echo ""
 
 # Fonction de nettoyage
@@ -86,7 +86,7 @@ cleanup() {
     echo ""
     echo ""
     echo "======================================================================"
-    echo "🛑 ARRÊT DES SERVEURS"
+    echo "ARRET DES SERVEURS"
     echo "======================================================================"
     echo ""
     
@@ -95,7 +95,7 @@ cleanup() {
     
     sleep 1
     
-    echo -e "${GREEN}✅ Tous les serveurs ont été arrêtés${NC}"
+    echo -e "${GREEN}Tous les serveurs ont ete arretes${NC}"
     echo "======================================================================"
     echo ""
     exit 0
@@ -105,28 +105,28 @@ cleanup() {
 trap cleanup INT TERM
 
 # Démarrer les serveurs
-echo "🚀 Démarrage des serveurs..."
+echo "Demarrage des serveurs..."
 echo ""
 
 (cd "$SCRIPT_DIR/REST" && python3 app.py > /tmp/rest.log 2>&1) &
-echo -e "  ${GREEN}✅${NC} REST API (port 5000) - PID $!"
+echo -e "  ${GREEN}OK${NC} REST API (port 5000) - PID $!"
 
 (cd "$SCRIPT_DIR/graphQL" && python3 server.py > /tmp/graphql.log 2>&1) &
-echo -e "  ${GREEN}✅${NC} GraphQL Server (port 5001) - PID $!"
+echo -e "  ${GREEN}OK${NC} GraphQL Server (port 5001) - PID $!"
 
 (cd "$SCRIPT_DIR/SOAP_WSDL" && python3 soap_server.py > /tmp/soap.log 2>&1) &
-echo -e "  ${GREEN}✅${NC} SOAP Server (port 8000) - PID $!"
+echo -e "  ${GREEN}OK${NC} SOAP Server (port 8000) - PID $!"
 
 (cd "$SCRIPT_DIR/grpc" && python3 server.py > /tmp/grpc.log 2>&1) &
-echo -e "  ${GREEN}✅${NC} gRPC Server (port 50051) - PID $!"
+echo -e "  ${GREEN}OK${NC} gRPC Server (port 50051) - PID $!"
 
 echo ""
-echo "⏳ Attente du démarrage des serveurs (5 secondes)..."
+echo "Attente du demarrage des serveurs (5 secondes)..."
 sleep 5
 
 # Ouvrir l'interface HTML
 echo ""
-echo "🌐 Ouverture de l'interface..."
+echo "Ouverture de l'interface..."
 echo ""
 
 # Déterminer le navigateur disponible et ouvrir le fichier HTML
@@ -144,7 +144,7 @@ open_browser() {
     elif command -v chromium &> /dev/null; then
         chromium "$html_file" 2>/dev/null &
     else
-        echo -e "  ${YELLOW}⚠️ Impossible d'ouvrir le navigateur automatiquement${NC}"
+        echo -e "  ${YELLOW}Impossible d'ouvrir le navigateur automatiquement${NC}"
         echo "  Ouvrez manuellement le fichier: $html_file"
         return 1
     fi
@@ -152,17 +152,17 @@ open_browser() {
 }
 
 if open_browser; then
-    echo -e "  ${GREEN}✅${NC} Interface ouverte"
+    echo -e "  ${GREEN}OK${NC} Interface ouverte"
 fi
 
 echo ""
 
 # Afficher les instructions
 echo "======================================================================"
-echo "✅ TOUS LES SERVEURS SONT LANCÉS"
+echo "TOUS LES SERVEURS SONT LANCES"
 echo "======================================================================"
 echo ""
-echo "Serveurs en cours d'exécution:"
+echo "Serveurs en cours d'execution:"
 echo "  • REST API           → http://localhost:5000"
 echo "  • GraphQL Server     → http://localhost:5001/graphql"
 echo "  • SOAP Server        → http://localhost:8000"
@@ -172,10 +172,10 @@ echo "Interface web:"
 echo "  • file://$SCRIPT_DIR/demo.html"
 echo ""
 echo "======================================================================"
-echo "📝 COMMANDES DISPONIBLES:"
+echo "COMMANDES DISPONIBLES:"
 echo "======================================================================"
-echo "  • Appuyez sur Ctrl+C pour arrêter tous les serveurs"
-echo "  • Fermez le navigateur quand vous avez terminé"
+echo "  • Appuyez sur Ctrl+C pour arreter tous les serveurs"
+echo "  • Fermez le navigateur quand vous avez termine"
 echo "======================================================================"
 echo ""
 

@@ -490,7 +490,7 @@
 
     <header>
         <div>
-            <h1>🌐 TP — Architectures orientées services</h1>
+            <h1>TP — Architectures orientées services</h1>
             <span>REST · SOAP/WSDL · GraphQL · gRPC</span>
         </div>
     </header>
@@ -647,12 +647,12 @@
 
         <!-- Comment SPYNE génère le WSDL -->
         <div style="margin-top: 1.5rem;">
-            <h3 style="margin-bottom: 1rem; color: #a8dadc; font-size: 1rem;">🔧 Comment fonctionne la génération WSDL ?</h3>
+            <h3 style="margin-bottom: 1rem; color: #a8dadc; font-size: 1rem;">Comment fonctionne la génération WSDL ?</h3>
             
             <div class="grid2" style="margin-bottom: 1rem;">
                 <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
                     <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
-                        1️⃣ Modèles de Données (ComplexModel)
+                        Modèles de Données (ComplexModel)
                     </h4>
                     <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
                         Les classes <code>Customer</code>, <code>Account</code>, et <code>Transaction</code> 
@@ -669,7 +669,7 @@
 
                 <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
                     <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
-                        2️⃣ Opérations SOAP (@rpc)
+                        Opérations SOAP (@rpc)
                     </h4>
                     <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
                         Le décorateur <strong>@rpc</strong> expose les méthodes comme opérations SOAP dans le WSDL. 
@@ -685,7 +685,7 @@
 
                 <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
                     <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
-                        3️⃣ Configuration Application
+                        Configuration Application
                     </h4>
                     <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
                         <strong>Spyne</strong> crée automatiquement l'application SOAP avec le protocole SOAP 1.1, 
@@ -700,7 +700,7 @@
 
                 <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
                     <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
-                        4️⃣ Accès au WSDL
+                        Accès au WSDL
                     </h4>
                     <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
                         Le WSDL généré peut être consulté à l'adresse :
@@ -859,7 +859,7 @@
         </div>
 
         <div class="panel">
-            <h3>📋 Opérations disponibles</h3>
+            <h3>Opérations disponibles</h3>
             <table style="width:100%;border-collapse:collapse;font-size:.85rem">
                 <thead>
                     <tr style="border-bottom:1px solid var(--border);color:var(--muted)">
@@ -900,12 +900,6 @@
             <span class="dot" style="background:var(--graphql);width:14px;height:14px"></span>
             GraphQL — Travel Planner
             <span style="font-size:.8rem;color:var(--muted);font-weight:400">Graphene · localhost:5001</span>
-        </div>
-
-        <div class="info-box gql">
-            Contrairement à REST (un endpoint par ressource), GraphQL expose un <strong>unique endpoint</strong>
-            <code>/graphql</code>. Le client choisit <strong>exactement</strong> les champs qu'il veut.
-            Support des <strong>Queries</strong> (lecture) et des <strong>Mutations</strong> (écriture).
         </div>
 
         <div class="grid2">
@@ -960,7 +954,7 @@
     activities
   }
 }</textarea>
-                <button class="btn btn-gql" onclick="gqlSend()">▶ Exécuter</button>
+                <button class="btn btn-gql" onclick="gqlSend()">Exécuter</button>
                 <div class="status-bar" style="margin-top:.8rem">
                     <span class="status-dot idle" id="s-gql"></span><span id="st-gql">Inactif</span>
                 </div>
@@ -969,9 +963,6 @@
             <div class="panel">
                 <h3>Réponse GraphQL</h3>
                 <div class="response-box" style="max-height:420px" id="r-gql">En attente d'une requête…</div>
-                <p style="font-size:.75rem;color:var(--muted);margin-top:.6rem">
-                    💡 Seuls les champs demandés sont retournés — c'est la <strong>sélection de champs</strong> GraphQL.
-                </p>
             </div>
         </div>
 
@@ -979,20 +970,12 @@
         <div class="panel" style="border-color:#e11d48">
             <h3>
                 <span class="badge badge-gql">SUBSCRIPTION</span>
-                Simulation temps réel — <code style="font-size:.8rem;color:var(--muted)">GET /graphql/subscribe (SSE)</code>
+                Simulation temps réel
             </h3>
-
-            <div class="info-box gql" style="margin-bottom:1rem">
-                Une vraie subscription GraphQL utilise <strong>WebSocket</strong>. Ici on simule le même comportement
-                avec <strong>Server-Sent Events (SSE)</strong> : le serveur <em>pousse</em> un événement à chaque
-                <code>createDestination</code>, <code>updateDestination</code> ou <code>deleteDestination</code>.
-                <br><br>
-                <strong>Comment tester :</strong> cliquez sur <em>S'abonner</em>, puis exécutez n'importe quelle mutation ci-dessus → les événements apparaissent en temps réel ici ↓
-            </div>
 
             <!-- schéma conceptuel -->
             <div style="background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;font-family:'Cascadia Code',monospace;font-size:.78rem;color:#c9d1d9;line-height:1.8">
-                <span style="color:#8b949e"># Schéma conceptuel de la subscription</span><br>
+                <!-- <span style="color:#8b949e"># Schéma conceptuel de la subscription</span><br> -->
                 <span style="color:#f97583">subscription</span> {<br>
                 &nbsp;&nbsp;<span style="color:#79c0ff">destinationAdded</span> {<br>
                 &nbsp;&nbsp;&nbsp;&nbsp;id &nbsp;name &nbsp;country &nbsp;pricePerDay<br>
@@ -1007,8 +990,8 @@
             </div>
 
             <div class="input-row">
-                <button class="btn btn-gql" id="btn-sub" onclick="gqlSubscribe()">🔔 S'abonner</button>
-                <button class="btn" style="background:#334155;color:#e2e8f0" onclick="gqlUnsubscribe()">✖ Se désabonner</button>
+                <button class="btn btn-gql" id="btn-sub" onclick="gqlSubscribe()">S'abonner</button>
+                <button class="btn" style="background:#334155;color:#e2e8f0" onclick="gqlUnsubscribe()">Se désabonner</button>
                 <span style="font-size:.8rem;color:var(--muted)" id="sub-counter"></span>
             </div>
 
@@ -1045,7 +1028,7 @@
                     Le serveur gRPC écoute sur le port <strong>50051</strong>. Reçoit un <code>sensor_id</code>, retourne une température simulée de 22.5°C.
                 </p>
                 <div class="input-row">
-                    <button class="btn btn-grpc" onclick="grpcStartServer()">▶ Démarrer le serveur</button>
+                    <button class="btn btn-grpc" onclick="grpcStartServer()">Démarrer le serveur</button>
                 </div>
                 <div class="status-bar">
                     <span class="status-dot idle" id="s-grpc-server"></span>
@@ -1064,7 +1047,7 @@
                 <div class="input-row">
                     <label>Capteur ID :</label>
                     <input type="text" id="grpc-sensor-id" value="SN-001" style="width:140px">
-                    <button class="btn btn-grpc" onclick="grpcCallClient()">▶ Lancer le client</button>
+                    <button class="btn btn-grpc" onclick="grpcCallClient()">Lancer le client</button>
                 </div>
                 <div class="status-bar">
                     <span class="status-dot idle" id="s-grpc-client"></span>
@@ -1082,18 +1065,15 @@
             <div class="code-block">syntax = <span class="hl-val">"proto3"</span>;
 package sensorservice;
 
-                    <span class="hl-cmt">// Service exposé</span>
                     service Sensor {
                     rpc <span class="hl-type">GetTemperature</span> (<span class="hl-type">SensorRequest</span>)
                     returns (<span class="hl-type">SensorResponse</span>);
                     }
 
-                    <span class="hl-cmt">// Requête : identifiant du capteur</span>
                     message <span class="hl-type">SensorRequest</span> {
                     string sensor_id = 1;
                     }
 
-<span class="hl-cmt">// Réponse : température + unité</span>
 message <span class="hl-type">SensorResponse</span> {
   float  temperature = 1;
   string unit        = 2;
@@ -1145,7 +1125,7 @@ message <span class="hl-type">SensorResponse</span> {
                 setResponse(statusId, text, ok);
             } catch (e) {
                 setStatus(statusId, false, 'Erreur réseau');
-                setResponse(statusId, `❌ Impossible de joindre le serveur.\n→ Lancez d'abord : python REST/app.py\n\n${e}`, false);
+                setResponse(statusId, `Impossible de joindre le serveur.\n→ Lancez d'abord : python REST/app.py\n\n${e}`, false);
             }
         }
 
@@ -1209,7 +1189,7 @@ message <span class="hl-type">SensorResponse</span> {
                 setResponse('gql', fmt(json), ok);
             } catch (e) {
                 setStatus('gql', false, 'Erreur réseau');
-                setResponse('gql', `❌ Impossible de joindre le serveur GraphQL.\n→ Lancez d'abord : python graphQL/server.py\n\n${e}`, false);
+                setResponse('gql', `Impossible de joindre le serveur GraphQL.\n→ Lancez d'abord : python graphQL/server.py\n\n${e}`, false);
             }
         }
 
@@ -1250,10 +1230,10 @@ message <span class="hl-type">SensorResponse</span> {
                 const color = colors[event.type] || '#c9d1d9';
 
                 const icons = {
-                    connected:           '🔗',
-                    destinationAdded:    '✅ ADDED',
-                    destinationUpdated:  '✏️  UPDATED',
-                    destinationDeleted:  '🗑️  DELETED',
+                    connected:           'CONNECTED',
+                    destinationAdded:    'ADDED',
+                    destinationUpdated:  'UPDATED',
+                    destinationDeleted:  'DELETED',
                 };
                 const label = icons[event.type] || event.type;
 
@@ -1291,14 +1271,14 @@ message <span class="hl-type">SensorResponse</span> {
                 const json = await response.json();
                 if (json.success) {
                     setStatus('grpc-server', true, 'Serveur en ligne');
-                    setResponse('grpc-server', `✅ Serveur gRPC lancé sur le port 50051\n\nSortie:\n${json.output}`, true);
+                    setResponse('grpc-server', `Serveur gRPC lancé sur le port 50051\n\nSortie:\n${json.output}`, true);
                 } else {
                     setStatus('grpc-server', false, 'Erreur');
-                    setResponse('grpc-server', `❌ Erreur au démarrage:\n${json.error}`, false);
+                    setResponse('grpc-server', `Erreur au démarrage:\n${json.error}`, false);
                 }
             } catch (e) {
                 setStatus('grpc-server', false, 'Erreur réseau');
-                setResponse('grpc-server', `❌ Impossible de joindre le serveur REST.\n\nAssurez-vous que REST/app.py est lancé.\n\n${e}`, false);
+                setResponse('grpc-server', `Impossible de joindre le serveur REST.\n\nAssurez-vous que REST/app.py est lancé.\n\n${e}`, false);
             }
         }
 
@@ -1314,14 +1294,14 @@ message <span class="hl-type">SensorResponse</span> {
                 const json = await response.json();
                 if (json.success) {
                     setStatus('grpc-client', true, 'Client exécuté');
-                    setResponse('grpc-client', `✅ Réponse du serveur gRPC:\n\n${json.output}`, true);
+                    setResponse('grpc-client', `Réponse du serveur gRPC:\n\n${json.output}`, true);
                 } else {
                     setStatus('grpc-client', false, 'Erreur');
-                    setResponse('grpc-client', `❌ Erreur lors de l'exécution du client:\n${json.error}`, false);
+                    setResponse('grpc-client', `Erreur lors de l'exécution du client:\n${json.error}`, false);
                 }
             } catch (e) {
                 setStatus('grpc-client', false, 'Erreur réseau');
-                setResponse('grpc-client', `❌ Impossible de joindre le serveur REST.\n\nAssurez-vous que:\n  1. python REST/app.py\n  2. python grpc/server.py\n\n${e}`, false);
+                setResponse('grpc-client', `Impossible de joindre le serveur REST.\n\nAssurez-vous que:\n  1. python REST/app.py\n  2. python grpc/server.py\n\n${e}`, false);
             }
         }
     </script>
