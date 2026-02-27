@@ -645,6 +645,77 @@
             automatiquement.
         </div>
 
+        <!-- Comment SPYNE génère le WSDL -->
+        <div style="margin-top: 1.5rem;">
+            <h3 style="margin-bottom: 1rem; color: #a8dadc; font-size: 1rem;">🔧 Comment fonctionne la génération WSDL ?</h3>
+            
+            <div class="grid2" style="margin-bottom: 1rem;">
+                <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
+                        1️⃣ Modèles de Données (ComplexModel)
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
+                        Les classes <code>Customer</code>, <code>Account</code>, et <code>Transaction</code> 
+                        héritent de <strong>ComplexModel</strong> de Spyne. Chaque propriété de classe devient 
+                        un type XSD dans le WSDL généré.
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(124, 58, 237, 0.1); border-radius: 4px; font-size: 0.75rem; color: #cbd5e1; font-family: monospace;">
+                        class Customer(ComplexModel):<br>
+                        &nbsp;&nbsp;customer_id = Unicode<br>
+                        &nbsp;&nbsp;first_name = Unicode<br>
+                        &nbsp;&nbsp;registration_date = DateTime
+                    </div>
+                </div>
+
+                <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
+                        2️⃣ Opérations SOAP (@rpc)
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
+                        Le décorateur <strong>@rpc</strong> expose les méthodes comme opérations SOAP dans le WSDL. 
+                        Les paramètres et le type de retour (<code>_returns</code>) définissent automatiquement 
+                        la signature WSDL.
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(124, 58, 237, 0.1); border-radius: 4px; font-size: 0.75rem; color: #cbd5e1; font-family: monospace;">
+                        @rpc(Unicode, Float, _returns=Boolean)<br>
+                        def transfer_money(ctx, account, amount):<br>
+                        &nbsp;&nbsp;# Implémentation
+                    </div>
+                </div>
+
+                <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
+                        3️⃣ Configuration Application
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
+                        <strong>Spyne</strong> crée automatiquement l'application SOAP avec le protocole SOAP 1.1, 
+                        le namespace cible, et génère le WSDL en fonction de tous les modèles et @rpc déclarés.
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(124, 58, 237, 0.1); border-radius: 4px; font-size: 0.75rem; color: #cbd5e1; font-family: monospace;">
+                        app = Application([BankingService],<br>
+                        &nbsp;&nbsp;tns='http://banking.soap.example.com')<br>
+                        # WSDL généré automatiquement!
+                    </div>
+                </div>
+
+                <div class="panel" style="padding: 1rem; border-left: 3px solid #7c3aed;">
+                    <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: #e2e8f0;">
+                        4️⃣ Accès au WSDL
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--muted); margin: 0;">
+                        Le WSDL généré peut être consulté à l'adresse :
+                    </p>
+                    <div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(124, 58, 237, 0.1); border-radius: 4px; font-size: 0.75rem; color: #22c55e; font-family: monospace;">
+                        <strong>http://localhost:8000/?wsdl</strong>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; margin-bottom: 0;">
+                        Les clients SOAP (comme <code>zeep</code>) accèdent à ce WSDL pour connaître les 
+                        opérations et structures de données disponibles.
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="flow">
             <div class="flow-box">Client Python (zeep)</div>
             <span class="flow-arrow">→</span>
@@ -659,7 +730,7 @@
 
         <div class="grid2">
             <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Scénario 1 — Requête : get_customer_info</h3>
+                <h3><span class="badge badge-soap">SOAP</span> Requête : get_customer_info</h3>
                 <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
                     <strong>HTTP POST</strong> <code>http://localhost:8000/</code>
                 </p>
@@ -681,7 +752,7 @@
             </div>
 
             <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Scénario 1 — Réponse : get_customer_infoResponse</h3>
+                <h3><span class="badge badge-soap">SOAP</span> Réponse : get_customer_infoResponse</h3>
                 <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
                     <strong>HTTP Response</strong> <code>http://localhost:8000/</code> <span style="color:#22c55e;font-weight:600">(status: 200)</span>
                 </p>
@@ -716,62 +787,6 @@
                 </div>
             </div>
 
-            <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Scénario 2 — Requête : transfer_money</h3>
-                <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
-                    <strong>HTTP POST</strong> <code>http://localhost:8000/</code>
-                </p>
-                <div class="code-block">&lt;?xml version='1.0' encoding='utf-8'?&gt;
-                    <span class="hl-tag">&lt;soap-env:Envelope</span>
-                    <span class="hl-attr">xmlns:soap-env</span>=<span
-                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span><span
-                        class="hl-tag">&gt;</span>
-                    <span class="hl-tag">&lt;soap-env:Body&gt;</span>
-                    <span class="hl-tag">&lt;ns0:transfer_money</span>
-                    <span class="hl-attr">xmlns:ns0</span>=<span
-                        class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
-                    <span class="hl-tag">&lt;ns0:from_account&gt;</span><span class="hl-str">ACC001</span><span
-                        class="hl-tag">&lt;/ns0:from_account&gt;</span>
-                    <span class="hl-tag">&lt;ns0:amount&gt;</span><span class="hl-str">300.0</span><span
-                        class="hl-tag">&lt;/ns0:amount&gt;</span>
-                    <span class="hl-tag">&lt;ns0:to_account&gt;</span><span class="hl-str">ACC002</span><span
-                        class="hl-tag">&lt;/ns0:to_account&gt;</span>
-                    <span class="hl-tag">&lt;ns0:description&gt;</span><span class="hl-str">Épargne
-                        mensuelle</span><span class="hl-tag">&lt;/ns0:description&gt;</span>
-                    <span class="hl-tag">&lt;/ns0:transfer_money&gt;</span>
-                    <span class="hl-tag">&lt;/soap-env:Body&gt;</span>
-                    <span class="hl-tag">&lt;/soap-env:Envelope&gt;</span>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h3><span class="badge badge-soap">SOAP</span> Scénario 2 — Réponse : transfer_moneyResponse</h3>
-                <p style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">
-                    <strong>HTTP Response</strong> <code>http://localhost:8000/</code> <span style="color:#22c55e;font-weight:600">(status: 200)</span>
-                </p>
-                <div class="code-block">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-                    <span class="hl-tag">&lt;soap11env:Envelope</span>
-                    <span class="hl-attr">xmlns:soap11env</span>=<span
-                        class="hl-val">"http://schemas.xmlsoap.org/soap/envelope/"</span>
-                    <span class="hl-attr">xmlns:tns</span>=<span
-                        class="hl-val">"http://banking.soap.example.com"</span><span class="hl-tag">&gt;</span>
-                    <span class="hl-tag">&lt;soap11env:Body&gt;</span>
-                    <span class="hl-tag">&lt;tns:transfer_moneyResponse&gt;</span>
-                    <span class="hl-tag">&lt;tns:transfer_moneyResult&gt;</span>
-                    <span class="hl-tag">&lt;tns:success&gt;</span><span class="hl-str">true</span><span
-                        class="hl-tag">&lt;/tns:success&gt;</span>
-                    <span class="hl-tag">&lt;tns:transaction_id&gt;</span><span class="hl-str">TXN8838A72B</span><span
-                        class="hl-tag">&lt;/tns:transaction_id&gt;</span>
-                    <span class="hl-tag">&lt;tns:message&gt;</span><span class="hl-str">Transfert réussi de 300.0
-                        EUR</span><span class="hl-tag">&lt;/tns:message&gt;</span>
-                    <span class="hl-tag">&lt;tns:new_balance&gt;</span><span class="hl-str">4700.0</span><span
-                        class="hl-tag">&lt;/tns:new_balance&gt;</span>
-                    <span class="hl-tag">&lt;/tns:transfer_moneyResult&gt;</span>
-                    <span class="hl-tag">&lt;/tns:transfer_moneyResponse&gt;</span>
-                    <span class="hl-tag">&lt;/soap11env:Body&gt;</span>
-                    <span class="hl-tag">&lt;/soap11env:Envelope&gt;</span>
-                </div>
-            </div>
 
             <div class="panel" style="grid-column: 1 / -1">
                 <h3><span class="badge badge-soap">WSDL</span> Structure du WSDL auto-généré — <code style="font-size:.8rem;color:var(--muted)">GET http://localhost:8000/?wsdl</code></h3>
